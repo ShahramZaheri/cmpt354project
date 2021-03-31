@@ -2,17 +2,20 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
-#Form for making a new user
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)]) 
-    email = StringField('Email',validators=[DataRequired(), Email()]) 
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign Up')
 
-#Form for making a new blog
-class BlogForm(FlaskForm):
-    username = SelectField('Username', choices=[], coerce=int)
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+
+#Form for inserting new employee
+class NewEmployeeForm(FlaskForm):
+    employee_first_name = StringField('First Name', validators=[DataRequired(), Length(min=1, max=10)]) 
+    employee_middle_name = StringField('Middle Name', validators=[DataRequired(), Length(min=1, max=25)]) 
+    employee_last_name = StringField('Last Name', validators=[DataRequired(), Length(min=1, max=25)])
+    employee_email = StringField('Email',validators=[DataRequired(), Email()])
+    employee_SIN = StringField('Social Insurance Number (SIN)', validators=[DataRequired(), Length(min=1, max=25)])
+    employee_phone = StringField('Phone Number', validators=[DataRequired(), Length(min=1, max=25)])
+    employee_Address= StringField('Home Address', validators=[DataRequired(), Length(min=1, max=25)])
+    employee_date_of_hire = StringField('Date of Hire', validators=[DataRequired(), Length(min=1, max=25)])
+    employee_date_of_birth = StringField('Date of Birth', validators=[DataRequired(), Length(min=1, max=25)])
+    submit = SubmitField('Add New Employee')
+
+# class removeEmployee(FlaskForm):
+
