@@ -132,7 +132,7 @@
 
   </div>
   <div class="form-row">
-    <div class="form-group col-md-12">
+    <div class="form-group col-md-6">
       {{ form.employee_Address.label(class="form-control-label") }}
 
       {% if form.employee_Address.errors %}
@@ -146,11 +146,52 @@
       {{ form.employee_Address(class="form-control form-control-lg") }}
       {% endif %}
     </div>
-
   </div>
-    
 
-    
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      {{ form.first_emergency_contact_full_name.label(class="form-control-label") }}
+
+      {% if form.first_emergency_contact_full_name.errors %}
+      {{ form.first_emergency_contact_full_name(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.first_emergency_contact_full_name.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.first_emergency_contact_full_name(class="form-control form-control-lg") }}
+      {% endif %}
+    </div>
+    <div class="form-group col-md-4">
+        {{ form.first_emergency_contact_full_name.label(class="form-control-label") }}
+  
+        {% if form.first_emergency_contact_full_name.errors %}
+        {{ form.first_emergency_contact_full_name(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          {% for error in form.first_emergency_contact_full_name.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %}
+        {{ form.first_emergency_contact_full_name(class="form-control form-control-lg") }}
+        {% endif %}
+      </div>
+      <div class="form-group col-md-4">
+        {{ form.first_emergency_contact_relationship.label(class="form-control-label") }}
+  
+        {% if form.first_emergency_contact_relationship.errors %}
+        {{ form.first_emergency_contact_relationship(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          {% for error in form.first_emergency_contact_relationship.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %}
+        {{ form.first_emergency_contact_relationship(class="form-control form-control-lg") }}
+        {% endif %}
+      </div>
+  </div>
 
     <div class="form-group">
       {{ form.submit(class="btn btn-outline-info") }}
