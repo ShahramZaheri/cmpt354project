@@ -34,12 +34,12 @@ def add_new_employee():
 
 @app.route('/report')
 def report():
-    conn = sqlite3.connect('hungfung.db')
-    conn.row_factory = dict_factory
-    c = conn.cursor()
-    c.execute("SELECT * FROM employee")
-    employees = c.fetchall()
-    return render_template('report.html', employees=employees)
+    # conn = sqlite3.connect('hungfung.db')
+    # conn.row_factory = dict_factory
+    # c = conn.cursor()
+    # c.execute("SELECT * FROM employee")
+    # employees = c.fetchall()
+    return render_template('report.html')
    
 
 @app.route('/employee/remove_employee', methods=['GET', 'POST'])

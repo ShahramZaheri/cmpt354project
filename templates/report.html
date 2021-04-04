@@ -1,16 +1,42 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% for employee in employees %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ employee.fname }}</a>
-            </div>
-            <h2><a class="article-title" href="#">{{ employee.lname }}</a></h2>
-            <p class="article-content">{{ employee.mname }}</p>
-          </div>
-        </article>
-    {% endfor %}
+<div class="container m-auto p-3 bg-light">
+  <div class="row">
+
+    <div class="col-sm-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Info of All Employees </h5>
+            <p class="card-text"> To get general information of all employees working in
+              the company, click button below </p>
+          <a href="#" class="btn btn-primary"> Get Info of Employees</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Payroll Info of Employee</h5>
+            <p class="card-text">Enter employee info and get his/her payroll info</p>
+          <a href="#" class="btn btn-primary">Get Payroll Info of Employee</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Tax Report</h5>
+            <p class="card-text">small description here </p>
+          <a href="#" class="btn btn-primary">Get Tax Info</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% endblock content %}
 
 
