@@ -22,5 +22,7 @@ class NewEmployeeForm(FlaskForm):
 
     submit = SubmitField('Add New Employee')
 
-# class removeEmployee(FlaskForm):
+class update_employee_info_form(FlaskForm):
+    employee_SIN = StringField('Social Insurance Number (SIN)', validators=[DataRequired(), Length(min=1, max=25)])
+    submit = SubmitField('Find Employee')
 

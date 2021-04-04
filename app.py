@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, flash, redirect
-from forms import NewEmployeeForm
+from forms import NewEmployeeForm, update_employee_info_form
 import sqlite3
 import os.path
 # print(os.path)
@@ -31,6 +31,11 @@ def employee():
 def add_new_employee():
     form=NewEmployeeForm()
     return render_template('add_new_employee.html',form=form)
+
+@app.route('/employee/update_employee_info', methods=['GET', 'POST'])
+def update_employee_info():
+    form=update_employee_info_form()
+    return render_template('update_employee_info.html',form=form)
 
 @app.route('/report')
 def report():
