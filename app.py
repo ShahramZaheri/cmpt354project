@@ -1,5 +1,6 @@
-from flask import Flask, render_template, url_for, flash, redirect
+from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import NewEmployeeForm, update_employee_info_form
+from flask_mysqldb import MYSQL
 import sqlite3
 import os.path
 # print(os.path)

@@ -1,5 +1,5 @@
 /*If tables with the name 'users' and 'blogs' already exist, then delete them.*/
-drop table if exists employee;
+/*drop table if exists employee;
  /*Create the 'users' table*/
 CREATE TABLE employee
 ( 
