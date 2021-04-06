@@ -40,7 +40,6 @@ def create_app(test_config=None):
                 conn.commit()
                 cur.close()
                 return str(rv)
-                
                 return render_template('employee.html')
 
         @app.route('/employee/add_new_employee', methods=['GET', 'POST'])
