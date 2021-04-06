@@ -61,6 +61,33 @@ def create_app(test_config=None):
         def removeEmployee():
                 form=NewEmployeeForm()
                 return render_template('removeEmployee.html', form=form)
+
+        @app.route('/report/employeeinfo', methods=['GET', 'POST'])
+        def employeeinfo():
+                #form=NewEmployeeForm()
+                return render_template('employeeinfo.html')
+
+
+        @app.route('/report/payroll', methods=['GET', 'POST'])
+        def payroll():
+                #form=NewEmployeeForm()
+                return render_template('payroll.html')
+
+
+        @app.route('/report/tax', methods=['GET', 'POST'])
+        def tax():
+                #form=NewEmployeeForm()
+                return render_template('tax.html')
+
+        @app.route('/shift', methods=['GET', 'POST'])
+        def shift():
+                #form=NewEmployeeForm()
+                return render_template('shift.html')
+
+        @app.route('/shift/timecard', methods=['GET', 'POST'])
+        def timecard():
+                #form=NewEmployeeForm()
+                return render_template('timecard.html')
         
         from . import db
         db.init_app(app)
