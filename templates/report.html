@@ -9,7 +9,7 @@
           <h5 class="card-title">Info of All Employees </h5>
             <p class="card-text"> To get general information of all employees working in
               the company, click button below </p>
-          <a href="#" class="btn btn-primary"> Get Info of Employees</a>
+          <a href="{{ url_for('employeeinfo') }}" class="btn btn-primary"> Get Info of Employees</a>
         </div>
       </div>
     </div>
@@ -19,7 +19,7 @@
         <div class="card-body">
           <h5 class="card-title">Payroll Info of Employee</h5>
             <p class="card-text">Enter employee info and get his/her payroll info</p>
-          <a href="#" class="btn btn-primary">Get Payroll Info of Employee</a>
+          <a href="{{ url_for('payroll') }}" class="btn btn-primary">Get Payroll Info of Employee</a>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
         <div class="card-body">
           <h5 class="card-title">Tax Report</h5>
             <p class="card-text">small description here </p>
-          <a href="#" class="btn btn-primary">Get Tax Info</a>
+          <a href="{{ url_for('tax') }}" class="btn btn-primary">Get Tax Info</a>
         </div>
       </div>
     </div>
