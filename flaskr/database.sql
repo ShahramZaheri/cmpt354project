@@ -15,12 +15,12 @@ Insert into employee values ('shahram', 'zaheri', 's');
 -- drop table if exists blogs;
 
 -- /*Create the 'users' table*/
--- CREATE TABLE users
--- ( username varchar(255), /*Username is of type varchar (variable character field) and has a length of 255 (can hold 0 - 255 characters)*/
--- email varchar(255),
--- password varchar(255),
--- PRIMARY KEY (username) /*Each user can be identified with their username*/
--- );
+ CREATE TABLE users
+( username varchar(255), /*Username is of type varchar (variable character field) and has a length of 255 (can hold 0 - 255 characters)*/
+    email varchar(255),
+    password varchar(255),
+    PRIMARY KEY (username) /*Each user can be identified with their username*/
+    );
 
 -- /*Create the 'blogs' table*/
 -- CREATE TABLE blogs
