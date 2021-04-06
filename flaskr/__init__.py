@@ -25,6 +25,12 @@ def create_app(test_config=None):
                 os.makedirs(app.instance_path)
         except OSError:
                 pass
+        #Turn the results from the database into a dictionary
+        def dict_factory(cursor, row):
+                d = {}
+                for idx, col in enumerate(cursor.description):
+                        d[col[0]] = row[idx]
+                return d
 
         @app.route('/')
         def index():
@@ -33,13 +39,7 @@ def create_app(test_config=None):
         @app.route('/employee', methods=['GET', 'POST'])
         def employee():
                 form=NewEmployeeForm()
-                conn = sqlite3.connect("instance/flaskr.sqlite")
-                cur = conn.cursor()
-                cur.execute('''SELECT * FROM employee''')
-                rv = cur.fetchall()
-                conn.commit()
-                cur.close()
-                return str(rv)
+                
                 return render_template('employee.html')
 
         @app.route('/employee/add_new_employee', methods=['GET', 'POST'])
@@ -64,8 +64,17 @@ def create_app(test_config=None):
 
         @app.route('/report/employeeinfo', methods=['GET', 'POST'])
         def employeeinfo():
-                #form=NewEmployeeForm()
-                return render_template('employeeinfo.html')
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                cur.execute('''SELECT * FROM employee''')
+                employees = cur.fetchall()
+                conn.commit()
+                cur.close()
+                # return str(rv)
+                # return str(len(employees))
+
+                return render_template('employeeinfo.html', employees=employees)
 
 
         @app.route('/report/payroll', methods=['GET', 'POST'])
