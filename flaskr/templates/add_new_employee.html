@@ -6,7 +6,7 @@
   </fieldset>
   <div class="form-row">
     <!-- first name -->
-    <div class="form-group col-md-4">
+    <div class="form-group col-md-3">
       {{ form.employee_first_name.label(class="form-control-label") }}
 
       {% if form.employee_first_name.errors %}
@@ -22,7 +22,7 @@
     </div>
     <!-- last name -->
 
-    <div class="form-group col-md-4">
+    <div class="form-group col-md-3">
       {{ form.employee_last_name.label(class="form-control-label") }}
 
       {% if form.employee_last_name.errors %}
@@ -37,7 +37,7 @@
       {% endif %}
     </div>
     <!-- middle name -->
-    <div class="form-group col-md-4">
+    <div class="form-group col-md-3">
       {{ form.employee_middle_name.label(class="form-control-label") }}
 
       {% if form.employee_middle_name.errors %}
@@ -51,10 +51,8 @@
       {{ form.employee_middle_name(class="form-control form-control-lg") }}
       {% endif %}
     </div>
-  </div>
-  <div class="form-row">
     <!-- phone number  -->
-    <div class="form-group col-md-4">
+    <div class="form-group col-md-3">
       {{ form.employee_phone.label(class="form-control-label") }}
 
       {% if form.employee_phone.errors %}
@@ -68,54 +66,10 @@
       {{ form.employee_phone(class="form-control form-control-lg") }}
       {% endif %}
     </div>
-    <!-- employee_SIN -->
-    <div class="form-group col-md-4">
-      {{ form.employee_SIN.label(class="form-control-label") }}
-
-      {% if form.employee_SIN.errors %}
-      {{ form.employee_SIN(class="form-control form-control-lg is-invalid") }}
-      <div class="invalid-feedback">
-        {% for error in form.employee_SIN.errors %}
-        <span>{{ error }}</span>
-        {% endfor %}
-      </div>
-      {% else %}
-      {{ form.employee_SIN(class="form-control form-control-lg") }}
-      {% endif %}
-    </div>
-    <!-- employee_date_of_hire -->
-    <div class="form-group col-md-4">
-      {{ form.employee_date_of_hire.label(class="form-control-label") }}
-
-      {% if form.employee_date_of_hire.errors %}
-      {{ form.employee_date_of_hire(class="form-control form-control-lg is-invalid") }}
-      <div class="invalid-feedback">
-        {% for error in form.employee_date_of_hire.errors %}
-        <span>{{ error }}</span>
-        {% endfor %}
-      </div>
-      {% else %}
-      {{ form.employee_date_of_hire(class="form-control form-control-lg") }}
-      {% endif %}
-    </div>
   </div>
   <div class="form-row">
-    <!-- employee_email -->
-    <div class="form-group col-md-8">
-      {{ form.employee_email.label(class="form-control-label") }}
-
-      {% if form.employee_email.errors %}
-      {{ form.employee_email(class="form-control form-control-lg is-invalid") }}
-      <div class="invalid-feedback">
-        {% for error in form.employee_email.errors %}
-        <span>{{ error }}</span>
-        {% endfor %}
-      </div>
-      {% else %}
-      {{ form.employee_email(class="form-control form-control-lg") }}
-      {% endif %}
-    </div>
-    <div class="form-group col-md-4">
+    <!-- employee date of birth -->
+    <div class="form-group col-md-3">
       {{ form.employee_date_of_birth.label(class="form-control-label") }}
 
       {% if form.employee_date_of_birth.errors %}
@@ -129,7 +83,36 @@
       {{ form.employee_date_of_birth(class="form-control form-control-lg") }}
       {% endif %}
     </div>
+    <!-- employee_date_of_hire -->
+    <div class="form-group col-md-3">
+      {{ form.employee_date_of_hire.label(class="form-control-label") }}
 
+      {% if form.employee_date_of_hire.errors %}
+      {{ form.employee_date_of_hire(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.employee_date_of_hire.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.employee_date_of_hire(class="form-control form-control-lg") }}
+      {% endif %}
+    </div>
+    <!-- employee_email -->
+    <div class="form-group col-md-6">
+      {{ form.employee_email.label(class="form-control-label") }}
+
+      {% if form.employee_email.errors %}
+      {{ form.employee_email(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.employee_email.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.employee_email(class="form-control form-control-lg") }}
+      {% endif %}
+    </div>
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
@@ -147,7 +130,55 @@
       {% endif %}
     </div>
   </div>
+  
+  <div class="form-row">
+    <!-- employee_SIN -->
+    <div class="form-group col-md-3">
+      {{ form.employee_SIN.label(class="form-control-label") }}
 
+      {% if form.employee_SIN.errors %}
+      {{ form.employee_SIN(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.employee_SIN.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.employee_SIN(class="form-control form-control-lg") }}
+      {% endif %}
+    </div>
+    <!-- employee role -->
+    <div class="form-group col-md-3">
+      {{ form.employee_role.label(class="form-control-label") }}
+
+      {% if form.employee_role.errors %}
+      {{ form.employee_role(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.employee_role.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.employee_role(class="form-control form-control-lg") }}
+      {% endif %}
+    </div>
+    <!-- employee salary -->
+    <div class="form-group col-md-3">
+      {{ form.employee_salary.label(class="form-control-label") }}
+
+      {% if form.employee_salary.errors %}
+      {{ form.employee_salary(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.employee_salary.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.employee_salary(class="form-control form-control-lg") }}
+      {% endif %}
+    </div>
+  </div>
+  
   <div class="form-row">
     <div class="form-group col-md-4">
       {{ form.first_emergency_contact_full_name.label(class="form-control-label") }}
