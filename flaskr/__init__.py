@@ -32,18 +32,6 @@ def create_app(test_config=None):
 
         @app.route('/employee', methods=['GET', 'POST'])
         def employee():
-                '''
-                form=NewEmployeeForm()
-                conn = sqlite3.connect("instance/flaskr.sqlite")
-                cur = conn.cursor()
-                '''
-                # cur.execute('''SELECT * FROM employee''')
-                '''
-                rv = cur.fetchall()
-                conn.commit()
-                cur.close()
-                return str(rv)
-                '''
                 return render_template('employee.html')
 
         @app.route('/employee/add_new_employee', methods=['GET', 'POST'])
@@ -68,7 +56,17 @@ def create_app(test_config=None):
 
         @app.route('/report/employeeinfo', methods=['GET', 'POST'])
         def employeeinfo():
-                #form=NewEmployeeForm()
+                
+                form=NewEmployeeForm()
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                cur = conn.cursor()
+                
+                cur.execute('''SELECT * FROM employee''')
+                
+                rv = cur.fetchall()
+                conn.commit()
+                cur.close()
+                return str(rv)
                 return render_template('employeeinfo.html')
 
 
