@@ -11,6 +11,8 @@ CREATE TABLE employee
 
 Insert into employee values ('shahram', 'zaheri', 's');
 Insert into employee values ('shah', 'zaheri', 'z');
+Insert into employee values ('Ishmam', 'Ishmam', 'z');
+Insert into employee values ('Belle', 'Ishmam', 'z');
 -- drop table if exists users;
 -- drop table if exists blogs;
 
