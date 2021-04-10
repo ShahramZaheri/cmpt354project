@@ -1,14 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<p>This page will show employee information.</p>
+<p>
+    Number of employees working in office: {{number_of_employees[0]['COUNT(*)']}}
+    Number of employees working in operation: {{number_of_employees[1]['COUNT(*)']}}
+
+</p>
+<!-- <p>{{employees}}</p> -->
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
-            <th scope="col">Middle Name</th>
+            <th scope="col">Working Place</th>
         </tr>
         </thead>
         <tbody>
@@ -20,7 +24,7 @@
                 <th scope="row"></th>
                 <td>{{employee.fname}}</td>
                 <td>{{employee.lname}}</td>
-                <td>{{employee.mname}}</td>
+                <td>{{employee.employee_role}}</td>
             </tr>
             
         {% endfor %}

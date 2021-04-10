@@ -49,12 +49,13 @@ def create_app(test_config=None):
                         conn = sqlite3.connect("instance/flaskr.sqlite")
                         c = conn.cursor()
                         #Add the new employee into the 'employee' table
-                        query = 'insert into employee VALUES (?, ?, ?)'
+                        query = 'insert into employee VALUES (?, ?, ?,?)'
                         c.execute(query, (form.employee_first_name.data, 
                         form.employee_last_name.data, 
-                        form.employee_middle_name.data)) #Execute the query
+                        form.employee_middle_name.data,
+                        form.employee_role.data)) #Execute the query
                         conn.commit() #Commit the changes
-                        flash(f'New employee {form.employee_first_name.data}added to db', 'success')
+                        flash(f'New employee {form.employee_first_name.data} added to db', 'success')
                         # flash("New employee added to database successfully")
                         return redirect(url_for('add_new_employee'))
                 return render_template('add_new_employee.html',form=form)
@@ -81,12 +82,18 @@ def create_app(test_config=None):
                 cur = conn.cursor()
                 cur.execute('''SELECT * FROM employee''')
                 employees = cur.fetchall()
+                cur.execute('''SELECT employee_role, COUNT(*)  
+                FROM employee 
+                GROUP BY employee_role''')
+                number_of_employees = cur.fetchall()
+                print(number_of_employees[0]['COUNT(*)'])
                 conn.commit()
                 cur.close()
-                # return str(rv)
+                # return str(number_of_employees)
                 # return str(len(employees))
 
-                return render_template('employeeinfo.html', employees=employees)
+                return render_template('employeeinfo.html', employees=employees,
+                number_of_employees=number_of_employees)
 
 
         @app.route('/report/payroll', methods=['GET', 'POST'])

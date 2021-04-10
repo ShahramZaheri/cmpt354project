@@ -52,6 +52,21 @@
       {{ form.employee_middle_name(class="form-control form-control-lg") }}
       {% endif %}
     </div>
+    <!-- employee role -->
+    <div class="form-group col-md-3">
+      {{ form.employee_role.label(class="form-control-label") }}
+
+      {% if form.employee_role.errors %}
+      {{ form.employee_role(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.employee_role.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.employee_role(class="form-control form-control-lg") }}
+      {% endif %}
+    </div>
   </div>
     <div class="form-group">
       {{ form.submit(class="btn btn-outline-info") }}

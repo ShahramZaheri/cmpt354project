@@ -6,13 +6,14 @@ CREATE TABLE employee
     fname varchar(100),
     lname varchar(100),
     mname varchar(100),
+    employee_role VARCHAR(100),
     PRIMARY KEY (fname) 
 );
 
-Insert into employee values ('shahram', 'zaheri', 's');
-Insert into employee values ('shah', 'zaheri', 'z');
-Insert into employee values ('Ishmam', 'Ishmam', 'z');
-Insert into employee values ('Belle', 'Ishmam', 'z');
+-- Insert into employee values ('shahram', 'zaheri', 's');
+-- Insert into employee values ('shah', 'zaheri', 'z');
+-- Insert into employee values ('Ishmam', 'Ishmam', 'z');
+-- Insert into employee values ('Belle', 'Ishmam', 'z');
 -- drop table if exists users;
 -- drop table if exists blogs;
 
