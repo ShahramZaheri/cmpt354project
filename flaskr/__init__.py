@@ -38,13 +38,25 @@ def create_app(test_config=None):
 
         @app.route('/employee', methods=['GET', 'POST'])
         def employee():
-                form=NewEmployeeForm()
+                # form=NewEmployeeForm()
                 
                 return render_template('employee.html')
 
         @app.route('/employee/add_new_employee', methods=['GET', 'POST'])
         def add_new_employee():
                 form=NewEmployeeForm()
+                if form.validate_on_submit():
+                        conn = sqlite3.connect("instance/flaskr.sqlite")
+                        c = conn.cursor()
+                        #Add the new employee into the 'employee' table
+                        query = 'insert into employee VALUES (?, ?, ?)'
+                        c.execute(query, (form.employee_first_name.data, 
+                        form.employee_last_name.data, 
+                        form.employee_middle_name.data)) #Execute the query
+                        conn.commit() #Commit the changes
+                        flash(f'New employee {form.employee_first_name.data}added to db', 'success')
+                        # flash("New employee added to database successfully")
+                        return redirect(url_for('add_new_employee'))
                 return render_template('add_new_employee.html',form=form)
 
         @app.route('/employee/update_employee_info', methods=['GET', 'POST'])
