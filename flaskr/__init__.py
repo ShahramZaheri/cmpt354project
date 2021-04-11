@@ -86,7 +86,7 @@ def create_app(test_config=None):
                 FROM employee 
                 GROUP BY employee_role''')
                 number_of_employees = cur.fetchall()
-                print(number_of_employees[0]['COUNT(*)'])
+                #print(number_of_employees[0]['COUNT(*)'])
                 conn.commit()
                 cur.close()
                 # return str(number_of_employees)
