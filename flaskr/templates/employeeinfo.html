@@ -4,30 +4,25 @@
 <p>
     Number of employees working in office: {{number_of_employees[0]['COUNT(*)']}}
     Number of employees working in operation: {{number_of_employees[1]['COUNT(*)']}}
-
 </p>
-<!-- <p>{{employees}}</p> -->
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Working Place</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for employee in employees %}
         <tr>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
-            <th scope="col">Working Place</th>
+            <!-- <th scope="row"></th> -->
+            <td>{{employee.fname}}</td>
+            <td>{{employee.lname}}</td>
+            <td>{{employee.employee_role}}</td>
         </tr>
-        </thead>
-        <tbody>
-        <!-- {% set i=1 %} -->
-        {% for employee in employees %}
-        <!-- {% set i = i+1 %} -->
         
-            <tr>
-                <th scope="row"></th>
-                <td>{{employee.fname}}</td>
-                <td>{{employee.lname}}</td>
-                <td>{{employee.employee_role}}</td>
-            </tr>
-            
-        {% endfor %}
-        </tbody>
-    </table>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock content %}
