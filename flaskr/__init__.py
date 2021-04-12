@@ -2,7 +2,7 @@ import os
 import sqlite3
 
 from flask import Flask, render_template, url_for, flash, redirect, request
-from forms import NewEmployeeForm, update_employee_info_form
+from forms import NewEmployeeForm, update_employee_info_form, remove_employee_form
 
 
 def create_app(test_config=None):
@@ -72,7 +72,21 @@ def create_app(test_config=None):
 
         @app.route('/employee/remove_employee', methods=['GET', 'POST'])
         def removeEmployee():
-                form=NewEmployeeForm()
+                form=remove_employee_form()
+                if form.validate_on_submit():
+                        #print('Is it working?')
+                        conn = sqlite3.connect("instance/flaskr.sqlite")
+                        c = conn.cursor()
+                        #Remove the employee from the 'employee' table
+                        query = 'DELETE FROM employee WHERE lname=(?)'
+                        c.execute(query, (
+                        form.employee_last_name.data,
+                        )) #Execute the query
+                        conn.commit() #Commit the changes
+                        flash(f'employee {form.employee_last_name.data} removed from db', 'success')
+                        # flash("New employee added to database successfully")
+                        return redirect(url_for('removeEmployee'))
+                
                 return render_template('removeEmployee.html', form=form)
 
         @app.route('/report/employeeinfo', methods=['GET', 'POST'])
