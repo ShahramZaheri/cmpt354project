@@ -50,14 +50,17 @@ def create_app(test_config=None):
                         c = conn.cursor()
                         #Add the new employee into the 'employee' table
                         query = 'insert into employee VALUES (?, ?, ?,?)'
+
+
                         c.execute(query, (form.employee_first_name.data, 
-                        form.employee_last_name.data, 
-                        form.employee_middle_name.data,
-                        form.employee_role.data)) #Execute the query
-                        conn.commit() #Commit the changes
+                                form.employee_last_name.data, 
+                                form.employee_middle_name.data,
+                                form.employee_role.data))
+                
+                        conn.commit()
                         flash(f'New employee {form.employee_first_name.data} added to db', 'success')
-                        # flash("New employee added to database successfully")
                         return redirect(url_for('add_new_employee'))
+
                 return render_template('add_new_employee.html',form=form)
 
         @app.route('/employee/update_employee_info', methods=['GET', 'POST'])
@@ -74,9 +77,9 @@ def create_app(test_config=None):
         def removeEmployee():
                 form=remove_employee_form()
                 if form.validate_on_submit():
-                        #print('Is it working?')
                         conn = sqlite3.connect("instance/flaskr.sqlite")
                         c = conn.cursor()
+
                         #Remove the employee from the 'employee' table
                         query = 'DELETE FROM employee WHERE lname=(?)'
                         c.execute(query, (
@@ -94,24 +97,27 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
-                # display all the employees and thier info
+                # display operations employees
                 cur.execute('''
-                        SELECT E.* 
-                        FROM Operations O, Employee E
-                        WHERE O.ID = E.EmployeeID
+                        SELECT E.*, P.PhoneNumber
+                        FROM Operations O, Employee E, Phone P
+                        WHERE O.ID = E.EmployeeID AND P.ID = E.EmployeeID AND O.ID = P.ID
                                ''')
-                employees = cur.fetchall()
-                '''
-                cur.execute('''#SELECT COUNT(*)  FROM Operations
-                ''')
-                number_of_employees = cur.fetchall()
-                '''
+                operations = cur.fetchall()
 
-
+                #display office employees
+                cur.execute('''
+                        SELECT E.*, P.PhoneNumber  
+                        FROM Office O, Employee E, Phone P
+                        WHERE O.ID = E.EmployeeID AND P.ID = E.EmployeeID AND O.ID = P.ID
+                               ''')
+                offices = cur.fetchall()
+                
                 conn.commit()
                 cur.close()
 
-                return render_template('employeeinfo.html', employees=employees)
+                return render_template('employeeinfo.html', operations=operations, offices=offices,
+                                        office_len=len(offices), operations_len=len(operations))
 
 
         @app.route('/report/payroll', methods=['GET', 'POST'])

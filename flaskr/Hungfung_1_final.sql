@@ -20,8 +20,9 @@ CREATE TABLE Vacation (
     PercentageofGrossPay float NOT NULL,
     YearlyCarryOver int NOT NULL,
     TotalVacationPaid float NOT NULL,
-    PRIMARY KEY (TotalVacationEarned),
+    PRIMARY KEY (TotalVacationEarned, ID),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
+    ON DELETE CASCADE
     );
 
 
@@ -30,8 +31,9 @@ CREATE TABLE EmergencyContact(
     PhoneNumber char(100) NOT NULL,
     Relation CHARACTER(100) NOT NULL,
     ID CHARACTER(7) NOT NULL,
-    PRIMARY KEY (ContactName),
+    PRIMARY KEY (ContactName, ID),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
+    ON DELETE CASCADE
   );
     
 CREATE TABLE Office(
@@ -39,6 +41,7 @@ CREATE TABLE Office(
     Salary int(9) NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
+    ON DELETE CASCADE
     );
     
 CREATE TABLE Operations(
@@ -46,6 +49,7 @@ CREATE TABLE Operations(
     WagePerHour float(9) NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
+    ON DELETE CASCADE
     );
 
 CREATE TABLE Payroll(
@@ -59,6 +63,7 @@ CREATE TABLE Payroll(
     ID char(7) NOT NULL,
     PRIMARY KEY (ChequeNumber),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
+    ON DELETE CASCADE
     );
 
 CREATE TABLE Shift(
@@ -69,6 +74,7 @@ CREATE TABLE Shift(
     DateofShift date NOT NULL,
     PRIMARY KEY (ShiftID),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
+    ON DELETE CASCADE
     );
 
 
@@ -77,9 +83,9 @@ CREATE TABLE Shift(
 CREATE TABLE Phone(
     PhoneNumber CHAR(10) NOT NULL,
     ID char(7) NOT NULL,
-    PRIMARY KEY(PhoneNumber),
+    PRIMARY KEY(PhoneNumber, ID),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
-
+    ON DELETE CASCADE
 );
 
 
