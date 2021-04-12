@@ -94,20 +94,24 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
-                cur.execute('''SELECT * FROM employee''')
+                # display all the employees and thier info
+                cur.execute('''
+                        SELECT E.* 
+                        FROM Operations O, Employee E
+                        WHERE O.ID = E.EmployeeID
+                               ''')
                 employees = cur.fetchall()
-                cur.execute('''SELECT employee_role, COUNT(*)  
-                FROM employee 
-                GROUP BY employee_role''')
+                '''
+                cur.execute('''#SELECT COUNT(*)  FROM Operations
+                ''')
                 number_of_employees = cur.fetchall()
-                #print(number_of_employees[0]['COUNT(*)'])
+                '''
+
+
                 conn.commit()
                 cur.close()
-                # return str(number_of_employees)
-                # return str(len(employees))
 
-                return render_template('employeeinfo.html', employees=employees,
-                number_of_employees=number_of_employees)
+                return render_template('employeeinfo.html', employees=employees)
 
 
         @app.route('/report/payroll', methods=['GET', 'POST'])
