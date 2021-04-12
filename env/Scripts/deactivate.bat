@@ -18,4 +18,8 @@ set _OLD_VIRTUAL_PATH=
 
 set VIRTUAL_ENV=
 
+set FLASK_APP=
+
+set FLASK_ENV=
+
 :END
