@@ -145,6 +145,7 @@ def create_app(test_config=None):
                         SELECT E.*, P.PhoneNumber
                         FROM Operations O, Employee E, Phone P
                         WHERE O.ID = E.EmployeeID AND P.ID = E.EmployeeID AND O.ID = P.ID
+                        ORDER BY UPPER(E.Lname) ASC
                                ''')
                 operations = cur.fetchall()
 
@@ -153,6 +154,7 @@ def create_app(test_config=None):
                         SELECT E.*, P.PhoneNumber  
                         FROM Office O, Employee E, Phone P
                         WHERE O.ID = E.EmployeeID AND P.ID = E.EmployeeID AND O.ID = P.ID
+                        ORDER BY UPPER(E.Lname) ASC
                                ''')
                 offices = cur.fetchall()
                 
