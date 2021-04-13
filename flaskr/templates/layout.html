@@ -34,19 +34,14 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
               <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="{{ url_for('report') }}">Reports
-                </a>
-                <a class="nav-item nav-link" href="{{ url_for('employee') }}">Employees
-                </a>
-                <a class="nav-item nav-link" href="{{ url_for('shift') }}">Shifts
-                </a>
-                <!-- <a class="nav-item nav-link" href="#">Add
-                  Blog</a> -->
+                <a class="nav-item nav-link" href="{{ url_for('report') }}">Reports</a>
+                <a class="nav-item nav-link" href="{{ url_for('employee') }}">Employees</a>
+                <a class="nav-item nav-link" href="{{ url_for('shift') }}">Shifts</a>
               </div>
+
               <!-- Navbar Right Side -->
               <div class="navbar-nav">
-                <a class="nav-item nav-link" href="#">Additional
-                  Items</a>
+                <a class="nav-item nav-link" href="{{ url_for('emergency') }}">Emergency Contacts</a>
               </div>
             </div>
           </div>

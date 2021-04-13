@@ -31,12 +31,14 @@ def create_app(test_config=None):
                 os.makedirs(app.instance_path)
         except OSError:
                 pass
+        
         #Turn the results from the database into a dictionary
         def dict_factory(cursor, row):
                 d = {}
                 for idx, col in enumerate(cursor.description):
                         d[col[0]] = row[idx]
                 return d
+        
 
         @app.route('/')
         def index():
@@ -185,9 +187,31 @@ def create_app(test_config=None):
         def timecard():
                 #form=NewEmployeeForm()
                 return render_template('timecard.html')
+
+        @app.route('/emergency', methods=['GET', 'POST'])
+        def emergency():
+                connection = sqlite3.connect("instance/flaskr.sqlite")
+                connection.row_factory = dict_factory
+                cur = connection.cursor()
+
+                # get distinct employee id to create tables 
+                cur.execute('''
+                                SELECT EC.ContactName, EC.PhoneNumber, 
+                                EC.Relation, E.Fname, E.Lname
+                                FROM EmergencyContact EC, Employee E 
+                                WHERE EC.ID = E.EmployeeID 
+                                ORDER BY E.Lname ASC
+                         ''')
+                emergency_contacts = cur.fetchall()
+
+
+                connection.commit()
+                cur.close()
+                return render_template('emergency.html',  emergency_contacts = emergency_contacts)
+
         
+
         from . import db
         db.init_app(app)
-
 
         return(app)

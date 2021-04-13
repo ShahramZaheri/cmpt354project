@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<h2>Emergency Contacts</h2>
+<table class="table">
+        <thead>
+        <tr>
+                <th scope="col">Employee Name</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">Relation to Employee</th>
+                <th scope="col">Contact Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for contact in emergency_contacts %}
+                <tr>
+                        <td>{{contact.Fname}} {{contact.Lname}}</td>
+                        <td>{{contact.PhoneNumber}}</td>
+                        <td>{{contact.Relation}}</td>
+                        <td>{{contact.ContactName}}</td>
+                </tr>
+                
+        {% endfor %}
+        </tbody>
+</table>
+
+
+{% endblock content %}
