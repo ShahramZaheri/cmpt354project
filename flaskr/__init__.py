@@ -94,7 +94,7 @@ def create_app(test_config=None):
                                 query = 'insert into Operations VALUES (?, ?)'
                                 c.execute(query, (EMPLOYEE_ID, float(form.employee_salary.data)))
 
-                        # Add thier Phone Number
+                        # Add their Phone Number
                         query = 'insert into Phone values (?,?)'
                         c.execute(query, (form.employee_phone.data, EMPLOYEE_ID) )
 
@@ -178,14 +178,21 @@ def create_app(test_config=None):
                 cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
                 employees = cur.fetchall()
                 employees_list=[(employee['Fname'] + " " + employee['Lname']) for employee in employees]
+                employees_list.insert(0,"")
                 form.employee_filter.choices = employees_list
                 if form.validate_on_submit():
-                        
-
+                        query = 'SELECT E.Fname, E.Lname, P.ChequeNumber, P.PayrollDate, P.GrossPay FROM Employee E, Payroll P WHERE P.ID = E.EmployeeID AND E.Fname = ? AND E.Lname = ? AND P.PayrollDate between ? and ?'
+                        fname = form.employee_filter.data.split(" ")[0]
+                        lname = form.employee_filter.data.split(" ")[1]
+                        cur.execute(query, (fname,
+                                             lname, 
+                                             form.start_date.data,
+                                             form.end_date.data))
+                        stubs = cur.fetchall()
                         conn.commit()
                         cur.close()
 
-                        return redirect(url_for('payroll'))  
+                        return render_template('payroll_data.html', stubs = stubs)  
                 return render_template('payroll.html', form = form)
 
 

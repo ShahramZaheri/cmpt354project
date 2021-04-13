@@ -30,7 +30,7 @@ class PayrollForm(FlaskForm):
     employee_filter = SelectField('Employee', coerce=str)
     start_date = StringField('From')
     end_date = StringField('To')
-    submit = SubmitField('Filter')
+    submit = SubmitField('Get Pay Stubs')
 
 class update_employee_info_form(FlaskForm):
     employee_SIN = StringField('Social Insurance Number (SIN)', validators=[DataRequired(), Length(min=1, max=25)])
