@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 from flask import Flask, render_template, url_for, flash, redirect, request
-from forms import NewEmployeeForm, update_employee_info_form, remove_employee_form
+from forms import NewEmployeeForm, update_employee_info_form, remove_employee_form, PayrollForm
 
 
 
@@ -169,8 +169,24 @@ def create_app(test_config=None):
 
         @app.route('/report/payroll', methods=['GET', 'POST'])
         def payroll():
-                #form=NewEmployeeForm()
-                return render_template('payroll.html')
+                form = PayrollForm()
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+
+                # Populate drop down dynamically
+                cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
+                employees = cur.fetchall()
+                employees_list=[(employee['Fname'] + " " + employee['Lname']) for employee in employees]
+                form.employee_filter.choices = employees_list
+                if form.validate_on_submit():
+                        
+
+                        conn.commit()
+                        cur.close()
+
+                        return redirect(url_for('payroll'))  
+                return render_template('payroll.html', form = form)
 
 
         @app.route('/report/tax', methods=['GET', 'POST'])
@@ -194,7 +210,7 @@ def create_app(test_config=None):
                 connection.row_factory = dict_factory
                 cur = connection.cursor()
 
-                # get distinct employee id to create tables 
+                # get emergency contact info
                 cur.execute('''
                                 SELECT EC.ContactName, EC.PhoneNumber, 
                                 EC.Relation, E.Fname, E.Lname

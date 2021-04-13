@@ -1,5 +1,65 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<p>This page will show employee payroll information.</p>
+<form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+        </fieldset>
+
+        <div class="form-row">
+
+                <!-- Employee Dropdown  -->
+                <div class="form-group col-md-4">
+                        {{ form.employee_filter.label(class="form-control-label") }}
+                  
+                        {% if form.employee_filter.errors %}
+                        {{ form.employee_filter(class="form-control form-control-sm is-invalid") }}
+                        <div class="invalid-feedback">
+                          {% for error in form.employee_filter.errors %}
+                          <span>{{ error }}</span>
+                          {% endfor %}
+                        </div>
+                        {% else %}
+                        {{ form.employee_filter(class="form-control form-control-sm") }}
+                        {% endif %}
+                </div>
+                
+
+                <!-- start date to filter  -->
+                <div class=" form-group col-md-4">
+                        {{ form.start_date.label(class="form-control-label") }}
+                
+                        {% if form.start_date.errors %}
+                        {{ form.start_date(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                                {% for error in form.start_date.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                        </div>
+                        {% else %}
+                        {{ form.start_date(class="form-control form-control-sm") }}
+                        {% endif %}
+                </div>
+        
+                <!-- end date to filter -->
+                <div class="form-group col-md-4">
+                        {{ form.end_date.label(class="form-control-label") }}
+        
+                        {% if form.end_date.errors %}
+                        {{ form.end_date(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                                {% for error in form.end_date.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                        </div>
+                        {% else %}
+                        {{ form.end_date(class="form-control form-control-sm") }}
+                        {% endif %}
+                </div>
+                
+        </div>
+        <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+</form>
 {% endblock content %}
