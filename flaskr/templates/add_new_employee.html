@@ -6,8 +6,9 @@
   <fieldset class="form-group">
   </fieldset>
   <div class="form-row">
+
     <!-- first name -->
-    <div class="form-group col-md-3">
+    <div class="form-group col-md-4">
       {{ form.employee_first_name.label(class="form-control-label") }}
 
       {% if form.employee_first_name.errors %}
@@ -21,9 +22,15 @@
       {{ form.employee_first_name(class="form-control form-control-lg") }}
       {% endif %}
     </div>
-    <!-- last name -->
+    
+    <!-- middle name -->
+    <div class="form-group col-md-4">
+      {{ form.employee_middle_name.label(class="form-control-label") }}
+      {{ form.employee_middle_name(class="form-control form-control-lg") }}
+    </div>
 
-    <div class="form-group col-md-3">
+    <!-- last name -->
+    <div class="form-group col-md-4">
       {{ form.employee_last_name.label(class="form-control-label") }}
 
       {% if form.employee_last_name.errors %}
@@ -37,21 +44,78 @@
       {{ form.employee_last_name(class="form-control form-control-lg") }}
       {% endif %}
     </div>
-    <!-- middle name -->
-    <div class="form-group col-md-3">
-      {{ form.employee_middle_name.label(class="form-control-label") }}
+  </div>
 
-      {% if form.employee_middle_name.errors %}
-      {{ form.employee_middle_name(class="form-control form-control-lg is-invalid") }}
+  <!-- address -->
+  <div class="form-group">
+    {{ form.employee_Address.label(class="form-control-label") }}
+
+      {% if form.employee_Address.errors %}
+      {{ form.employee_Address(class="form-control form-control-lg is-invalid") }}
       <div class="invalid-feedback">
-        {% for error in form.employee_middle_name.errors %}
+        {% for error in form.employee_Address.errors %}
         <span>{{ error }}</span>
         {% endfor %}
       </div>
       {% else %}
-      {{ form.employee_middle_name(class="form-control form-control-lg") }}
+      {{ form.employee_Address(class="form-control form-control-lg") }}
       {% endif %}
     </div>
+  </div>
+
+  <div class="form-row">
+
+    <!-- SIN -->
+    <div class=" form-group col-md-6">
+      {{ form.employee_SIN.label(class="form-control-label") }}
+
+      {% if form.employee_SIN.errors %}
+      {{ form.employee_SIN(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.employee_SIN.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.employee_SIN(class="form-control form-control-lg") }}
+      {% endif %}
+    </div>
+
+    <!-- Birthday -->
+    <div class="form-group col-md-6">
+      {{ form.employee_date_of_birth.label(class="form-control-label") }}
+
+      {% if form.employee_date_of_birth.errors %}
+      {{ form.employee_date_of_birth(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.employee_date_of_birth.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.employee_date_of_birth(class="form-control form-control-lg") }}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="form-row">
+
+    <!-- Phone Number -->
+    <div class="form-group col-md-6">
+      {{ form.employee_phone.label(class="form-control-label") }}
+
+      {% if form.employee_phone.errors %}
+      {{ form.employee_phone(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.employee_phone.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.employee_phone(class="form-control form-control-lg") }}
+      {% endif %}
+    </div>
+
     <!-- employee role -->
     <div class="form-group col-md-3">
       {{ form.employee_role.label(class="form-control-label") }}
@@ -67,9 +131,30 @@
       {{ form.employee_role(class="form-control form-control-lg") }}
       {% endif %}
     </div>
-  </div>
-    <div class="form-group">
-      {{ form.submit(class="btn btn-outline-info") }}
+
+    <!-- employee salary/wage-->
+    <div class="form-group col-md-3">
+      {{ form.employee_salary.label(class="form-control-label") }}
+
+      {% if form.employee_salary.errors %}
+      {{ form.employee_salary(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.employee_salary.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.employee_salary(class="form-control form-control-lg") }}
+      {% endif %}
     </div>
+     
+  </div>
+
+
+
+
+  <div class="form-group">
+    {{ form.submit(class="btn btn-outline-info") }}
+  </div>
 </form>
 {% endblock content %}

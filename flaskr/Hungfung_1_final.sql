@@ -6,7 +6,7 @@ CREATE TABLE Employee(
     DateofBirth DATE NOT NULL,
     DateofHire DATE NOT NULL,
     Fname CHARACTER(100) NOT NULL,
-    Mname CHARACTER(100) NOT NULL,
+    Mname CHARACTER(100) ,
     Lname CHARACTER(100) NOT NULL,
     Address CHARACTER(100) NOT NULL,
     PRIMARY KEY (EmployeeID)
@@ -96,11 +96,11 @@ CREATE TABLE Phone(
 /*insert values*/
 
 INSERT INTO Employee (EmployeeID, SIN, DateofBirth, DateofHire, Fname, Mname, Lname, Address)
-VALUES (0001, 897586, '1987-01-09', '2018-04-26', 'Jack', 'Young', 'Ma', '8990 Alpha Street'),
-	   (0002, 397486, '1987-04-28', '2010-03-23', 'Emma', 'Yye', 'Zhang', '8990 Beta Street'),
-	   (0003, 296586, '1980-09-01', '2012-05-16', 'Alan', 'Zhu', 'Kit', '1990 Nova Street'),
-	   (0004, 697086, '1970-03-21', '2013-01-04', 'Wilson', 'Stephan', 'Kit', '3090 Crew Street'),
-       (0005, 197526, '1990-02-09', '2015-07-07', 'Sharon', 'Yao', 'Wang', '1990 Walter Street');
+VALUES (0001, 897586446, '1987-01-09', '2018-04-26', 'Jack', 'Young', 'Ma', '8990 Alpha Street'),
+	   (0002, 397486256, '1987-04-28', '2010-03-23', 'Emma', 'Yye', 'Zhang', '8990 Beta Street'),
+	   (0003, 296586884, '1980-09-01', '2012-05-16', 'Alan', 'Zhu', 'Kit', '1990 Nova Street'),
+	   (0004, 697086464, '1970-03-21', '2013-01-04', 'Wilson', 'Stephan', 'Kit', '3090 Crew Street'),
+       (0005, 197526335, '1990-02-09', '2015-07-07', 'Sharon', 'Yao', 'Wang', '1990 Walter Street');
 
 
 

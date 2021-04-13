@@ -1,11 +1,17 @@
 import os
 import sqlite3
+from datetime import datetime
+
 
 from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import NewEmployeeForm, update_employee_info_form, remove_employee_form
 
 
+
+
+
 def create_app(test_config=None):
+        
         # create and configure the app
         app = Flask(__name__, instance_relative_config=True)
         app.config.from_mapping(
@@ -45,21 +51,58 @@ def create_app(test_config=None):
         @app.route('/employee/add_new_employee', methods=['GET', 'POST'])
         def add_new_employee():
                 form=NewEmployeeForm()
+                TODAYS_DATE = datetime.today().strftime('%Y-%m-%d')
+
                 if form.validate_on_submit():
+                        
+                        if(len(form.employee_middle_name.data) == 0):
+                                # no middle name
+                                form.employee_middle_name.data = "NULL"
+                        
                         conn = sqlite3.connect("instance/flaskr.sqlite")
                         c = conn.cursor()
-                        #Add the new employee into the 'employee' table
-                        query = 'insert into employee VALUES (?, ?, ?,?)'
 
-
-                        c.execute(query, (form.employee_first_name.data, 
-                                form.employee_last_name.data, 
+                        #use next available ID
+                        c.execute('''
+                                SELECT MAX(EmployeeID)
+                                FROM Employee
+                                '''
+                                )
+                        Employee_id_dict = list(c.fetchall())
+                        EMPLOYEE_ID = str(int(Employee_id_dict[0][0]) + 1)
+                      
+                        #Add the new employee into the 'Employee' table
+                        query = 'insert into Employee VALUES (?, ?, ?, ?, ?, ?, ?,?)'
+                        c.execute(query, (EMPLOYEE_ID,
+                                form.employee_SIN.data,
+                                form.employee_date_of_birth.data,
+                                TODAYS_DATE,
+                                form.employee_first_name.data,
                                 form.employee_middle_name.data,
-                                form.employee_role.data))
+                                form.employee_last_name.data,
+                                form.employee_Address.data))
+                        
+                        if (form.employee_role.data == "office"):
+                                # add to office table
+                                query = 'insert into Office VALUES (?, ?)'
+                                c.execute(query, (EMPLOYEE_ID, int(form.employee_salary.data)))
+                        
+                        else:
+                                # add to operations table
+                                query = 'insert into Operations VALUES (?, ?)'
+                                c.execute(query, (EMPLOYEE_ID, float(form.employee_salary.data)))
+
+                        # Add thier Phone Number
+                        query = 'insert into Phone values (?,?)'
+                        c.execute(query, (form.employee_phone.data, EMPLOYEE_ID) )
+
                 
                         conn.commit()
-                        flash(f'New employee {form.employee_first_name.data} added to db', 'success')
+                        c.close()
+
+                        flash(f'{form.employee_first_name.data} {form.employee_last_name.data}: added to database', 'success')
                         return redirect(url_for('add_new_employee'))
+                        
 
                 return render_template('add_new_employee.html',form=form)
 
