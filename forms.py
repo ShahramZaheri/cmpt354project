@@ -16,7 +16,6 @@ class NewEmployeeForm(FlaskForm):
     roles=["office", "operation"]
     employee_role = SelectField('Employee works at', choices = roles, validators = [DataRequired()])
     employee_salary = DecimalField('Employee Salary/Wage', places=2, validators=[DataRequired()])
-
     submit = SubmitField('Add New Employee')
 
 class PayrollForm(FlaskForm):
@@ -24,8 +23,6 @@ class PayrollForm(FlaskForm):
     start_date = StringField('From')
     end_date = StringField('To')
     submit = SubmitField('Get Pay Stubs')
-
-
 
 class ContactForm(FlaskForm):
     emergency_contact_employee = SelectField('Employee', coerce=str)
