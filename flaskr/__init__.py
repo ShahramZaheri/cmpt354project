@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 from flask import Flask, render_template, url_for, flash, redirect, request
-from forms import NewEmployeeForm, update_employee_info_form, remove_employee_form, PayrollForm, ContactForm, RemoveContactForm
+from forms import NewEmployeeForm, update_employee_info_form, RemoveEmployeeForm, PayrollForm, ContactForm, RemoveContactForm
 
 
 
@@ -131,22 +131,37 @@ def create_app(test_config=None):
 
         @app.route('/employee/remove_employee', methods=['GET', 'POST'])
         def removeEmployee():
-                form=remove_employee_form()
-                if form.validate_on_submit():
-                        conn = sqlite3.connect("instance/flaskr.sqlite")
-                        c = conn.cursor()
+                form = RemoveEmployeeForm()
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
 
-                        #Remove the employee from the 'employee' table
-                        query = 'DELETE FROM employee WHERE lname=(?)'
-                        c.execute(query, (
-                        form.employee_last_name.data,
-                        )) #Execute the query
-                        conn.commit() #Commit the changes
-                        flash(f'employee {form.employee_last_name.data} removed from db', 'success')
-                        # flash("New employee added to database successfully")
+                # get emergency contact info
+                cur.execute('''
+                                SELECT E1.*
+                                FROM Operations O, Employee E1
+                                WHERE O.ID = E1.EmployeeID
+                                UNION
+                                SELECT E2.*
+                                FROM Office Of, Employee E2
+                                WHERE Of.ID = E2.EmployeeID
+                                ORDER BY E2.Lname ASC
+
+                        ''')
+                employees = cur.fetchall()
+
+                if form.validate_on_submit():
+                        selected_employees = request.form.getlist('chkb')
+                        for e in selected_employees:
+                                #remove selected employees 
+                                query = "DELETE FROM Employee WHERE EmployeeID = ?"
+                                cur.execute(query,(e))
+
+                        conn.commit()
+                        cur.close()
                         return redirect(url_for('removeEmployee'))
                 
-                return render_template('removeEmployee.html', form=form)
+                return render_template('removeEmployee.html', form=form, employees = employees)
 
         @app.route('/report/employeeinfo', methods=['GET', 'POST'])
         def employeeinfo():

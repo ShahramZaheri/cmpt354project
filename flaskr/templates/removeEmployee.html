@@ -1,34 +1,46 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<p>Please enter the informaiton of the employee below.</p>
 
+<p>Check the box beside the employee(s) you would like to delete</p>
 <form method="POST" action="">
     {{ form.hidden_tag() }}
     <fieldset class="form-group">
     </fieldset>
-    <div class="form-row">
-     
-      <!-- last name -->
+    <table class="table">
+      <thead>
+      <tr>
+          <th scope="col">ID</th>
+          <th scope="col">SIN</th>
+          <th scope="col">Date of Birth</th>
+          <th scope="col">Date of Hire</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Middle Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">Address</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for employee in employees %}
+          <tr>
   
-      <div class="form-group col-md-3">
-        {{ form.employee_last_name.label(class="form-control-label") }}
-  
-        {% if form.employee_last_name.errors %}
-        {{ form.employee_last_name(class="form-control form-control-lg is-invalid") }}
-        <div class="invalid-feedback">
-          {% for error in form.employee_last_name.errors %}
-          <span>{{ error }}</span>
-          {% endfor %}
-        </div>
-        {% else %}
-        {{ form.employee_last_name(class="form-control form-control-lg") }}
-        {% endif %}
-      </div>
-      
-    </div>
-      <div class="form-group">
+              <td>{{employee.EmployeeID}}</td>
+              <td>{{employee.SIN}}</td>
+              <td>{{employee.DateofBirth}}</td>
+              <td>{{employee.DateofHire}}</td>
+              <td>{{employee.Fname}}</td>
+              <td>{{employee.Mname}}</td>
+              <td>{{employee.Lname}}</td>
+              <td>{{employee.Address}}</td>
+              <td><input type="checkbox" name="chkb" value="{{employee.EmployeeID}}"/> </td>
+          </tr>
+          
+      {% endfor %}
+      </tbody>
+
+    <div class="form-group">
         {{ form.submit(class="btn btn-outline-info") }}
-      </div>
-  </form>
+    </div>
+</form>
+
 {% endblock content %}

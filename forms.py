@@ -27,7 +27,8 @@ class PayrollForm(FlaskForm):
 class RemoveContactForm(FlaskForm):
     submit = SubmitField('DELETE')
 
-
+class RemoveEmployeeForm(FlaskForm):
+    submit = SubmitField('DELETE')
 
 class ContactForm(FlaskForm):
     emergency_contact_employee = SelectField('Employee', coerce=str)
@@ -40,6 +41,4 @@ class update_employee_info_form(FlaskForm):
     employee_SIN = StringField('Social Insurance Number (SIN)', validators=[DataRequired(), Length(min=1, max=25)])
     submit = SubmitField('Find Employee')
 
-class remove_employee_form(FlaskForm):
-    employee_last_name = StringField('Last Name', validators=[DataRequired(), Length(min=1, max=25)])
-    submit = SubmitField('Remove Employee')
+
