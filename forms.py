@@ -13,8 +13,8 @@ class NewEmployeeForm(FlaskForm):
     employee_Address= StringField('Home Address', validators=[DataRequired(), Length(min=1, max=100)])
     employee_date_of_birth = StringField('Date of Birth', validators=[DataRequired(), Length(min=1, max=25)])
     roles=["office", "operation"]
-    employee_role = SelectField('Employee works at', choices = roles, validators = [DataRequired()])
-    employee_salary = DecimalField('Employee Salary/Wage', places=2, validators=[DataRequired()])
+    employee_role = SelectField('Department', choices = roles, validators = [DataRequired()])
+    employee_salary = DecimalField('Salary/Wage', places=2, validators=[DataRequired()])
     submit = SubmitField('Add New Employee')
 
 class PayrollForm(FlaskForm):

@@ -44,9 +44,12 @@ def create_app(test_config=None):
         def index():
                 return render_template('index.html')
 
+        
+
+#################################################################################### Employee Pages 
+
         @app.route('/employee', methods=['GET', 'POST'])
         def employee():
-                # form=()
                 
                 return render_template('employee.html')
 
@@ -136,7 +139,7 @@ def create_app(test_config=None):
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
 
-                # get emergency contact info
+                # list all employees
                 cur.execute('''
                                 SELECT E1.*
                                 FROM Operations O, Employee E1
@@ -163,6 +166,8 @@ def create_app(test_config=None):
                 
                 return render_template('removeEmployee.html', form=form, employees = employees)
 
+
+#################################################################################### Report Pages 
         @app.route('/report/employeeinfo', methods=['GET', 'POST'])
         def employeeinfo():
                 conn = sqlite3.connect("instance/flaskr.sqlite")
@@ -170,7 +175,7 @@ def create_app(test_config=None):
                 cur = conn.cursor()
                 # display operations employees
                 cur.execute('''
-                        SELECT E.*, P.PhoneNumber
+                        SELECT E.*, P.PhoneNumber, O.WagePerHour
                         FROM Operations O, Employee E, Phone P
                         WHERE O.ID = E.EmployeeID AND P.ID = E.EmployeeID AND O.ID = P.ID
                         ORDER BY UPPER(E.Lname) ASC
@@ -179,7 +184,7 @@ def create_app(test_config=None):
 
                 #display office employees
                 cur.execute('''
-                        SELECT E.*, P.PhoneNumber  
+                        SELECT E.*, P.PhoneNumber, O.Salary  
                         FROM Office O, Employee E, Phone P
                         WHERE O.ID = E.EmployeeID AND P.ID = E.EmployeeID AND O.ID = P.ID
                         ORDER BY UPPER(E.Lname) ASC
@@ -256,6 +261,8 @@ def create_app(test_config=None):
                 #form=NewEmployeeForm()
                 return render_template('timecard.html')
 
+        
+#################################################################################### Emergency Contact Pages 
         @app.route('/emergency', methods=['GET', 'POST'])
         def emergency():
                 connection = sqlite3.connect("instance/flaskr.sqlite")
