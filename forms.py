@@ -3,7 +3,6 @@ from wtforms import StringField, IntegerField, PasswordField, SubmitField, Boole
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 
-
 #Form for inserting new employee
 class NewEmployeeForm(FlaskForm):
     employee_first_name = StringField('First Name', validators=[DataRequired(), Length(min=1, max=100)]) 
