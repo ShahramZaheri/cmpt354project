@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 from flask import Flask, render_template, url_for, flash, redirect, request
-from forms import NewEmployeeForm, update_employee_info_form, remove_employee_form, PayrollForm
+from forms import NewEmployeeForm, update_employee_info_form, remove_employee_form, PayrollForm, ContactForm
 
 
 
@@ -236,14 +236,42 @@ def create_app(test_config=None):
                                 ORDER BY E.Lname ASC
                          ''')
                 emergency_contacts = cur.fetchall()
-               
-                        
-                        
-
 
                 connection.commit()
                 cur.close()
                 return render_template('emergency.html',  emergency_contacts = emergency_contacts)
+        
+        @app.route('/add_emergency_contact', methods=['GET', 'POST'])
+        def add_emergency_contact():
+                form =  ContactForm()
+
+                # open database connection
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+
+                # Populate drop down dynamically
+                cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
+                employees = cur.fetchall()
+                employees_list=[(employee['Fname'] + " " + employee['Lname']) for employee in employees]
+                employees_list.insert(0,"")
+                form.emergency_contact_employee.choices = employees_list
+
+                if form.validate_on_submit():
+                        print(haha)
+                        return redirect(url_for('add_emergency_contact'))
+
+
+                return(render_template('add_emergency_contact.html', form = form))
+
+        
+        @app.route('/delete_emergency_contact', methods=['GET', 'POST'])
+        def delete_emergency_contact():
+                
+
+                return(render_template('delete_emergency_contact.html'))
+
+
 
         
 

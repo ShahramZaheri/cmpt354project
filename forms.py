@@ -17,12 +17,6 @@ class NewEmployeeForm(FlaskForm):
     roles=["office", "operation"]
     employee_role = SelectField('Employee works at', choices = roles, validators = [DataRequired()])
     employee_salary = DecimalField('Employee Salary/Wage', places=2, validators=[DataRequired()])
-    
-    
-    
-    # first_emergency_contact_full_name = StringField('Emergency Contact Full Name', validators=[DataRequired(), Length(min=1, max=25)])
-    # first_emergency_contact_relationship = StringField('Relationship with Employee', validators=[DataRequired(), Length(min=1, max=25)]) 
-    # first_emergency_contact_phone_number = StringField('Emergency Contact Phone Number', validators=[DataRequired(), Length(min=1, max=25)])
 
     submit = SubmitField('Add New Employee')
 
@@ -31,6 +25,15 @@ class PayrollForm(FlaskForm):
     start_date = StringField('From')
     end_date = StringField('To')
     submit = SubmitField('Get Pay Stubs')
+
+
+
+class ContactForm(FlaskForm):
+    emergency_contact_employee = SelectField('Employee', coerce=str)
+    emergency_contact_name = StringField('Contact Full Name', validators=[DataRequired(), Length(min=1, max=100)])
+    emergency_contact_phone = StringField('Contact Phone Number', validators=[DataRequired(), Length(min=10, max=10)])
+    emergency_contact_relation = StringField('Relationship with Employee', validators=[DataRequired(), Length(min=1, max=25)]) 
+    submit = SubmitField('Add Contact')
 
 class update_employee_info_form(FlaskForm):
     employee_SIN = StringField('Social Insurance Number (SIN)', validators=[DataRequired(), Length(min=1, max=25)])
