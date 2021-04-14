@@ -18,6 +18,7 @@ venv/
 *.pyc
 __pycache__/
 
+#Dont't track created database file 
 instance/
 
 .pytest_cache/
