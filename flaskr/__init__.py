@@ -278,7 +278,17 @@ def create_app(test_config=None):
                 form.emergency_contact_employee.choices = employees_list
 
                 if form.validate_on_submit():
-                        print(haha)
+                        fname = form.emergency_contact_employee.data.split(" ")[0]
+                        lname = form.emergency_contact_employee.data.split(" ")[1]
+                        query = '''
+                                SELECT E.EmployeeID
+                                FROM Employee E
+                                WHERE Fname = ? AND Lname = ? 
+                                '''
+                        cur.execute(query,(fname,lname))
+                        ID = cur.fetchall()[0]['EmployeeID']
+                        print(ID)
+                        
                         return redirect(url_for('add_emergency_contact'))
 
 
