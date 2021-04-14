@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 from flask import Flask, render_template, url_for, flash, redirect, request
-from forms import NewEmployeeForm, update_employee_info_form, remove_employee_form, PayrollForm, ContactForm
+from forms import NewEmployeeForm, update_employee_info_form, remove_employee_form, PayrollForm, ContactForm, RemoveContactForm
 
 
 
@@ -304,7 +304,7 @@ def create_app(test_config=None):
                         conn.commit()
                         cur.close()
 
-                        flash(f'{form.emergency_contact_name.data}: added to database as Emergency Contact for {form.emergency_contact_employee.data}', 'success')
+                        flash(f'{form.emergency_contact_name.data}: added as Emergency Contact for {form.emergency_contact_employee.data}', 'success')
                         return redirect(url_for('add_emergency_contact'))
 
 
@@ -313,9 +313,47 @@ def create_app(test_config=None):
         
         @app.route('/delete_emergency_contact', methods=['GET', 'POST'])
         def delete_emergency_contact():
-                
+                form = RemoveContactForm()
+                connection = sqlite3.connect("instance/flaskr.sqlite")
+                connection.row_factory = dict_factory
+                cur = connection.cursor()
 
-                return(render_template('delete_emergency_contact.html'))
+                # get emergency contact info
+                cur.execute('''
+                                SELECT EC.ContactName, EC.PhoneNumber, 
+                                EC.Relation, E.Fname, E.Lname
+                                FROM EmergencyContact EC, Employee E 
+                                WHERE EC.ID = E.EmployeeID 
+                                ORDER BY E.Lname, E.Fname ASC
+                        ''')
+                emergency_contacts = cur.fetchall()
+
+                if form.validate_on_submit():
+                        selected_contacts = request.form.getlist('chk')
+
+                        #loop over selected employees removing each one
+                        for c in selected_contacts:
+                                contact_name = c.split("+")[0]
+                                employee_Fname = c.split("+")[1]
+                                employee_Lname = c.split("+")[2]
+
+                                # find the ID to remove
+                                query = "SELECT E.EmployeeID FROM Employee E WHERE E.Fname = ? AND E.Lname =?"
+                                cur.execute(query,(employee_Fname, employee_Lname))
+                                ID = cur.fetchall()[0]['EmployeeID']
+                                print(ID)
+                                # delete contact
+                                query = '''DELETE FROM EmergencyContact 
+                                        WHERE ContactName = ? AND ID = ?  '''
+                                cur.execute(query,(contact_name, ID))
+
+
+                        connection.commit()
+                        cur.close()
+                        
+                        return(redirect(url_for('emergency')))
+
+                return(render_template('delete_emergency_contact.html', form = form, emergency_contacts = emergency_contacts))
 
 
 

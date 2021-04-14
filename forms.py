@@ -19,12 +19,15 @@ class NewEmployeeForm(FlaskForm):
 
 class PayrollForm(FlaskForm):
     employee_filter = SelectField('Employee', coerce=str)
-    string1 = TextField('Display ')
     options = ["Last 25", "YTD"]
-    string2 = TextField('pay stubs')
-    
     payroll_date_range = SelectField('Filter Stubs By', choices = options, validators = [DataRequired()])
     submit = SubmitField('Get Pay Stubs')
+
+
+class RemoveContactForm(FlaskForm):
+    submit = SubmitField('DELETE')
+
+
 
 class ContactForm(FlaskForm):
     emergency_contact_employee = SelectField('Employee', coerce=str)
