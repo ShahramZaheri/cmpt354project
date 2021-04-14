@@ -106,11 +106,11 @@ VALUES (0001, 897586446, '1987-01-09', '2018-04-26', 'Jack', 'Young', 'Ma', '899
 
 
 INSERT INTO EmergencyContact  (ContactName, PhoneNumber, Relation, ID)
-VALUES ('Belle Lu', (889) 908-1728,'Sister',0001),
-       ('Wang Zhu', (883) 902-1123,'Wife',0002),
-       ('Ling Che', (183) 202-1098,'Cousin',0003),
-       ('Lee Hwang',(113) 204-1323,'Friend',0004),
-       ('Christopher Wayne',(522) 041-3623,'Father',0005);
+VALUES ('Belle Lu', '(889) 908-1728','Sister',0001),
+       ('Wang Zhu', '(883) 902-1123','Wife',0002),
+       ('Ling Che', '(183) 202-1098','Cousin',0003),
+       ('Lee Hwang','(113) 204-1323','Friend',0004),
+       ('Christopher Wayne','(522) 041-3623','Father',0005);
 
 
 INSERT INTO Office (ID, Salary)
