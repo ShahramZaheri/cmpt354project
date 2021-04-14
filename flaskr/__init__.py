@@ -253,7 +253,7 @@ def create_app(test_config=None):
                                 EC.Relation, E.Fname, E.Lname
                                 FROM EmergencyContact EC, Employee E 
                                 WHERE EC.ID = E.EmployeeID 
-                                ORDER BY E.Lname ASC
+                                ORDER BY E.Lname, E.Fname ASC
                          ''')
                 emergency_contacts = cur.fetchall()
 
@@ -287,8 +287,24 @@ def create_app(test_config=None):
                                 '''
                         cur.execute(query,(fname,lname))
                         ID = cur.fetchall()[0]['EmployeeID']
-                        print(ID)
                         
+                        # format phone number to: (xxx) xxx-xxxx
+                        tmp = form.emergency_contact_phone.data
+                        first = tmp[0:3]
+                        second = tmp[3:6]
+                        third = tmp[6:10]
+                        format_number = "(" + first + ") " + second + "-" + third
+
+                        query = '''
+                                INSERT INTO EmergencyContact VALUES(?,?,?,?) 
+                                '''
+                        cur.execute(query, (form.emergency_contact_name.data, format_number , 
+                                             form.emergency_contact_relation.data, ID))
+                        
+                        conn.commit()
+                        cur.close()
+
+                        flash(f'{form.emergency_contact_name.data}: added to database as Emergency Contact for {form.emergency_contact_employee.data}', 'success')
                         return redirect(url_for('add_emergency_contact'))
 
 
