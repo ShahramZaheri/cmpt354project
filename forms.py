@@ -8,7 +8,6 @@ class NewEmployeeForm(FlaskForm):
     employee_first_name = StringField('First Name', validators=[DataRequired(), Length(min=1, max=100)]) 
     employee_middle_name = StringField('Middle Name',validators=[ Length(max=100)]) 
     employee_last_name = StringField('Last Name', validators=[DataRequired(), Length(min=1, max=100)])
-    # employee_email = StringField('Email',validators=[DataRequired(), Email()])
     employee_SIN = StringField('Social Insurance Number (SIN)', validators=[DataRequired(), Length(min=9, max=9)])
     employee_phone = StringField('Phone Number', validators=[DataRequired(), Length(min=1, max=20)])
     employee_Address= StringField('Home Address', validators=[DataRequired(), Length(min=1, max=100)])
@@ -20,8 +19,11 @@ class NewEmployeeForm(FlaskForm):
 
 class PayrollForm(FlaskForm):
     employee_filter = SelectField('Employee', coerce=str)
-    start_date = StringField('From')
-    end_date = StringField('To')
+    string1 = TextField('Display ')
+    options = ["Last 25", "YTD"]
+    string2 = TextField('pay stubs')
+    
+    payroll_date_range = SelectField('Filter Stubs By', choices = options, validators = [DataRequired()])
     submit = SubmitField('Get Pay Stubs')
 
 class ContactForm(FlaskForm):

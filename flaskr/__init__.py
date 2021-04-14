@@ -8,7 +8,7 @@ from forms import NewEmployeeForm, update_employee_info_form, remove_employee_fo
 
 
 
-
+TODAYS_DATE = datetime.today().strftime('%Y-%m-%d')
 
 def create_app(test_config=None):
         
@@ -53,8 +53,8 @@ def create_app(test_config=None):
         @app.route('/employee/add_new_employee', methods=['GET', 'POST'])
         def add_new_employee():
                 form=NewEmployeeForm()
-                TODAYS_DATE = datetime.today().strftime('%Y-%m-%d')
-
+                
+                global TODAYS_DATE 
                 if form.validate_on_submit():
                         
                         if(len(form.employee_middle_name.data) == 0):
@@ -180,6 +180,7 @@ def create_app(test_config=None):
 
         @app.route('/report/payroll', methods=['GET', 'POST'])
         def payroll():
+                global TODAYS_DATE
                 form = PayrollForm()
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
@@ -194,15 +195,34 @@ def create_app(test_config=None):
                 if form.validate_on_submit():
                         query = '''SELECT E.Fname, E.Lname, P.ChequeNumber, P.PayrollDate, P.GrossPay
                                 FROM Employee E, Payroll P
-                                WHERE P.ID = E.EmployeeID AND E.Fname = ? AND E.Lname = ? AND P.PayrollDate between ? and ?'''
+                                WHERE P.ID = E.EmployeeID AND E.Fname = ? AND E.Lname = ? AND P.PayrollDate between ? and ? LIMIT ?'''
+                        
                         fname = form.employee_filter.data.split(" ")[0]
                         lname = form.employee_filter.data.split(" ")[1]
-                        cur.execute(query, (fname,lname, form.start_date.data, form.end_date.data))
+                        if (form.payroll_date_range.data == "YTD"):
+                                #Show pay stubs from start of year
+                                start = TODAYS_DATE[0:4] + "-01-01"
+                                end = TODAYS_DATE
+                                limit = 100
+                        else:
+                                #Show up to the last 25 stubs
+                                start = "2000-01-01"
+                                end = TODAYS_DATE
+                                limit = 25
+                        cur.execute(query, (fname,lname,start ,end ,limit))
                         stubs = cur.fetchall()
+
+
+                        query = '''SELECT SUM(P.GrossPay)
+                                FROM Employee E, Payroll P
+                                WHERE P.ID = E.EmployeeID AND E.Fname = ? AND E.Lname = ? AND P.PayrollDate between ? and ? LIMIT ?'''
+                        cur.execute(query, (fname,lname,start ,end ,limit))
+
+                        gross_pay = cur.fetchall()
                         conn.commit()
                         cur.close()
 
-                        return render_template('payroll_data.html', stubs = stubs)  
+                        return render_template('payroll_data.html', stubs = stubs, gross_pay = gross_pay[0]['SUM(P.GrossPay)'])  
                 return render_template('payroll.html', form = form)
 
 

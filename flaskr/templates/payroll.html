@@ -23,39 +23,22 @@
                         {{ form.employee_filter(class="form-control form-control-sm") }}
                         {% endif %}
                 </div>
-                
-
-                <!-- start date of filter  -->
-                <div class=" form-group col-md-4">
-                        {{ form.start_date.label(class="form-control-label") }}
-                
-                        {% if form.start_date.errors %}
-                        {{ form.start_date(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                                {% for error in form.start_date.errors %}
-                                <span>{{ error }}</span>
-                                {% endfor %}
-                        </div>
-                        {% else %}
-                        {{ form.start_date(class="form-control form-control-sm") }}
-                        {% endif %}
-                </div>
         
-                <!-- end date of filter -->
                 <div class="form-group col-md-4">
-                        {{ form.end_date.label(class="form-control-label") }}
-        
-                        {% if form.end_date.errors %}
-                        {{ form.end_date(class="form-control form-control-lg is-invalid") }}
+                        {{ form.payroll_date_range.label(class="form-control-label") }}
+                  
+                        {% if form.payroll_date_range.errors %}
+                        {{ form.payroll_date_range(class="form-control form-control-sm is-invalid") }}
                         <div class="invalid-feedback">
-                                {% for error in form.end_date.errors %}
-                                <span>{{ error }}</span>
-                                {% endfor %}
+                          {% for error in form.payroll_date_range.errors %}
+                          <span>{{ error }}</span>
+                          {% endfor %}
                         </div>
                         {% else %}
-                        {{ form.end_date(class="form-control form-control-sm") }}
+                        {{ form.payroll_date_range(class="form-control form-control-sm") }}
                         {% endif %}
                 </div>
+                
                 
         </div>
         <div class="form-group">
