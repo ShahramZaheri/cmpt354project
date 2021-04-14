@@ -72,6 +72,8 @@ def create_app(test_config=None):
                                 )
                         Employee_id_dict = list(c.fetchall())
                         EMPLOYEE_ID = str(int(Employee_id_dict[0][0]) + 1)
+
+                        
                       
                         #Add the new employee into the 'Employee' table
                         query = 'insert into Employee VALUES (?, ?, ?, ?, ?, ?, ?,?)'
@@ -94,9 +96,18 @@ def create_app(test_config=None):
                                 query = 'insert into Operations VALUES (?, ?)'
                                 c.execute(query, (EMPLOYEE_ID, float(form.employee_salary.data)))
 
+
+                        # format phone number to: (xxx) xxx-xxxx
+                        tmp = form.employee_phone.data
+                        first = tmp[0:3]
+                        second = tmp[3:6]
+                        third = tmp[6:10]
+                        format_number = "(" + first + ") " + second + "-" + third
+                        
+
                         # Add their Phone Number
                         query = 'insert into Phone values (?,?)'
-                        c.execute(query, (form.employee_phone.data, EMPLOYEE_ID) )
+                        c.execute(query, (format_number, EMPLOYEE_ID) )
 
                 
                         conn.commit()
@@ -181,13 +192,12 @@ def create_app(test_config=None):
                 employees_list.insert(0,"")
                 form.employee_filter.choices = employees_list
                 if form.validate_on_submit():
-                        query = 'SELECT E.Fname, E.Lname, P.ChequeNumber, P.PayrollDate, P.GrossPay FROM Employee E, Payroll P WHERE P.ID = E.EmployeeID AND E.Fname = ? AND E.Lname = ? AND P.PayrollDate between ? and ?'
+                        query = '''SELECT E.Fname, E.Lname, P.ChequeNumber, P.PayrollDate, P.GrossPay
+                                FROM Employee E, Payroll P
+                                WHERE P.ID = E.EmployeeID AND E.Fname = ? AND E.Lname = ? AND P.PayrollDate between ? and ?'''
                         fname = form.employee_filter.data.split(" ")[0]
                         lname = form.employee_filter.data.split(" ")[1]
-                        cur.execute(query, (fname,
-                                             lname, 
-                                             form.start_date.data,
-                                             form.end_date.data))
+                        cur.execute(query, (fname,lname, form.start_date.data, form.end_date.data))
                         stubs = cur.fetchall()
                         conn.commit()
                         cur.close()
@@ -226,6 +236,9 @@ def create_app(test_config=None):
                                 ORDER BY E.Lname ASC
                          ''')
                 emergency_contacts = cur.fetchall()
+               
+                        
+                        
 
 
                 connection.commit()

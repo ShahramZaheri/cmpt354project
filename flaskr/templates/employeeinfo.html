@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<!-- Page that displays general employee info -->
 <h2>Operations Employees: {{operations_len}}</h2> 
 <table class="table">
     <thead>
@@ -19,7 +20,7 @@
     <tbody>
     {% for operation in operations %}
         <tr>
-            <!-- <th scope="row"></th> -->
+
             <td>{{operation.EmployeeID}}</td>
             <td>{{operation.SIN}}</td>
             <td>{{operation.DateofBirth}}</td>

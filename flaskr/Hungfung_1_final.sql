@@ -28,7 +28,7 @@ CREATE TABLE Vacation (
 
 CREATE TABLE EmergencyContact(
     ContactName CHARACTER(100) NOT NULL,
-    PhoneNumber char(100) NOT NULL,
+    PhoneNumber char(20) NOT NULL,
     Relation CHARACTER(100) NOT NULL,
     ID CHARACTER(7) NOT NULL,
     PRIMARY KEY (ContactName, ID),
@@ -81,7 +81,7 @@ CREATE TABLE Shift(
 
 
 CREATE TABLE Phone(
-    PhoneNumber CHAR(10) NOT NULL,
+    PhoneNumber CHAR(20) NOT NULL,
     ID char(7) NOT NULL,
     PRIMARY KEY(PhoneNumber, ID),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
@@ -106,11 +106,11 @@ VALUES (0001, 897586446, '1987-01-09', '2018-04-26', 'Jack', 'Young', 'Ma', '899
 
 
 INSERT INTO EmergencyContact  (ContactName, PhoneNumber, Relation, ID)
-VALUES ('Belle Lu', 8899081728,'Sister',0001),
-       ('Wang Zhu', 8839021123,'Wife',0002),
-       ('Ling Che', 1832021098,'Cousin',0003),
-       ('Lee Hwang',1132041323,'Friend',0004),
-       ('Christopher Wayne',5220413623,'Father',0005);
+VALUES ('Belle Lu', (889) 908-1728,'Sister',0001),
+       ('Wang Zhu', (883) 902-1123,'Wife',0002),
+       ('Ling Che', (183) 202-1098,'Cousin',0003),
+       ('Lee Hwang',(113) 204-1323,'Friend',0004),
+       ('Christopher Wayne',(522) 041-3623,'Father',0005);
 
 
 INSERT INTO Office (ID, Salary)
@@ -135,11 +135,11 @@ VALUES (10001,'2021-03-25',5000,12,23,15,16,0001),
        (10010,'2020-11-10',5000,12,23,15,16,0001);
 
 INSERT INTO Phone(PhoneNumber, ID)
-VALUES (7787895645, 0001),
-       (6045123695, 0002),
-	   (7789561234, 0003),
-	   (7784561293, 0004),
-	   (7782361290, 0005);
+VALUES ('(778) 789-5645', 0001),
+       ('(604) 512-3695', 0002),
+	   ('(778) 956-1234', 0003),
+	   ('(778) 456-1293', 0004),
+	   ('(778) 236-1290', 0005);
 
 INSERT INTO Vacation(ID, TotalVacationEarned, PercentageofGrossPay, YearlyCarryOver, TotalVacationPaid)
 VALUES(0001,2000,0.4,2000,0),
