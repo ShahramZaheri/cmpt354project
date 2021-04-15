@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, PasswordField, SubmitField, BooleanField, TextField, TextAreaField, SelectField, DecimalField
+from wtforms import StringField, IntegerField, PasswordField, SubmitField, BooleanField, TextField, TextAreaField, SelectField, DecimalField,DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 
@@ -23,6 +23,19 @@ class PayrollForm(FlaskForm):
     payroll_date_range = SelectField('Filter Stubs By', choices = options, validators = [DataRequired()])
     submit = SubmitField('Get Pay Stubs')
 
+class Add_shift_form(FlaskForm):
+    employee_filter = SelectField('Employee', coerce=str)
+    date_of_shift = DateField('Date of Shift',format='%Y-%m-%d', validators = [DataRequired()])
+    options=[]
+    for i in range(1,25):
+        options.append(i)
+    shift_start_time = SelectField('Start Time', choices = options, validators = [DataRequired()])
+    sift_end_time = SelectField('End Time', choices = options, validators = [DataRequired()])
+    submit = SubmitField('Add Shift')
+
+class get_shifts_form(FlaskForm):
+    employee_filter = SelectField('Employee', coerce=str)
+    submit = SubmitField('Get Timecards')
 
 class RemoveContactForm(FlaskForm):
     submit = SubmitField('DELETE')

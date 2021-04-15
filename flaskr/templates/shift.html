@@ -6,9 +6,18 @@
     <div class="col-sm-4">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Employee time cards </h5>
-            <p class="card-text"> To get general information of shift hours, click button below </p>
-          <a href="{{ url_for('timecard') }}" class="btn btn-primary"> Get Info of Time Cards from Employee</a>
+          <h5 class="card-title">Employee Time Cards </h5>
+            <p class="card-text"> To see time cards of an employee, click button below. </p>
+          <a href="{{ url_for('timecard') }}" class="btn btn-primary"> Get Employee Time Cards</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Add Time Card </h5>
+            <p class="card-text"> To add time cards, click button below. Then fill out the form. </p>
+          <a href="{{ url_for('add_shift') }}" class="btn btn-primary"> Add Shift</a>
         </div>
       </div>
     </div>

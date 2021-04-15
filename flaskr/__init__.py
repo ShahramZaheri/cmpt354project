@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 from flask import Flask, render_template, url_for, flash, redirect, request
-from forms import NewEmployeeForm, update_employee_info_form, RemoveEmployeeForm, PayrollForm, ContactForm, RemoveContactForm
+from forms import NewEmployeeForm, update_employee_info_form, RemoveEmployeeForm, PayrollForm, ContactForm, RemoveContactForm, Add_shift_form, get_shifts_form
 
 
 
@@ -250,16 +250,75 @@ def create_app(test_config=None):
         def tax():
                 #form=NewEmployeeForm()
                 return render_template('tax.html')
+# ################################## shift pages #####################################################
+        conn = sqlite3.connect("instance/flaskr.sqlite")
+        conn.row_factory = dict_factory
+        cur = conn.cursor()
+        # Populate drop down dynamically
+        cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
+        employees = cur.fetchall()
+        employees_list=[(employee['Fname'] + " " + employee['Lname']) for employee in employees]
+        employees_list.insert(0,"")
 
         @app.route('/shift', methods=['GET', 'POST'])
         def shift():
-                #form=NewEmployeeForm()
+                
                 return render_template('shift.html')
 
         @app.route('/shift/timecard', methods=['GET', 'POST'])
         def timecard():
-                #form=NewEmployeeForm()
-                return render_template('timecard.html')
+                form = get_shifts_form()
+                form.employee_filter.choices = employees_list
+                return render_template('timecard.html', form=form)
+
+
+        @app.route('/shift/add_shit', methods=['GET', 'POST'])
+        def add_shift():
+                form = Add_shift_form()
+                form.employee_filter.choices = employees_list
+                if form.validate_on_submit():
+                        conn = sqlite3.connect("instance/flaskr.sqlite")
+                        conn.row_factory = dict_factory
+                        cur = conn.cursor()
+                        # calculating the next shift id to be added
+                        cur.execute('''
+                                SELECT MAX(ShiftID)
+                                FROM Shift
+                                '''
+                                )
+                        Shift_ID_dictionary = cur.fetchall()
+                        max_shift_id = Shift_ID_dictionary[0]['MAX(ShiftID)']
+                        next_shift_id_to_be_added = str(int(max_shift_id)+1)
+                        # calculating employee id from fname and lastname
+                        employee_full_name = form.employee_filter.data
+                        employee_full_name_list = employee_full_name.split(" ")
+                        # print(employee_full_name_list[0])
+                        # print(type(employee_full_name_list[0]))
+                        # print(employee_full_name_list[1])
+                        # query = ''' SELECT EmployeeID
+                        #          FROM Employee
+                        #          WHERE Fname LIKE %"Emma"% '''
+                        #         #   +'"'+ employee_full_name_list[0] +'"' 
+
+                        # cur.execute(query)
+                        # emloyee_id = cur.fetchone
+                        # print(emloyee_id)
+                        
+                
+                        # Employee_id_dict = list(c.fetchall())
+                        # EMPLOYEE_ID = str(int(Employee_id_dict[0][0]) + 1)
+                        # query = 'insert into Shift VALUES (?, ?, ?, ?, ?, ?, ?,?)'
+                        # c.execute(query, 
+                        # (EMPLOYEE_ID,
+                        #         form.employee_SIN.data,
+                        #         form.employee_date_of_birth.data,
+                        #         form.employee_first_name.data,
+                
+                        #         form.shift_start_time.data,
+                        #         form.sift_end_time.data,
+                        #         form.date_of_shift.data))
+                        
+                return render_template('add_shift.html', form=form)
 
         
 #################################################################################### Emergency Contact Pages 
