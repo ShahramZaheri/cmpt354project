@@ -251,14 +251,21 @@ def create_app(test_config=None):
                 #form=NewEmployeeForm()
                 return render_template('tax.html')
 # ################################## shift pages #####################################################
-        conn = sqlite3.connect("instance/flaskr.sqlite")
-        conn.row_factory = dict_factory
-        cur = conn.cursor()
-        # Populate drop down dynamically
-        cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
-        employees = cur.fetchall()
-        employees_list=[(employee['Fname'] + " " + employee['Lname']) for employee in employees]
-        employees_list.insert(0,"")
+        
+       
+        
+        def get_employee_id_from_fname_lname(fname,lname):
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                query = ''' SELECT EmployeeID
+                                 FROM Employee
+                                 WHERE Fname = ? AND Lname = ?''' 
+
+                cur.execute(query,(fname,lname))
+                emloyee_id = cur.fetchall()[0]['EmployeeID']
+                return emloyee_id
+
 
         @app.route('/shift', methods=['GET', 'POST'])
         def shift():
@@ -268,18 +275,45 @@ def create_app(test_config=None):
         @app.route('/shift/timecard', methods=['GET', 'POST'])
         def timecard():
                 form = get_shifts_form()
+                # Populate drop down dynamically
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
+                employees = cur.fetchall()
+                employees_list=[(employee['Fname'] + " " + employee['Lname']) for employee in employees]
+                employees_list.insert(0,"")
                 form.employee_filter.choices = employees_list
+                if form.validate_on_submit():
+                        employee_full_name = form.employee_filter.data
+                        fname = form.employee_filter.data.split(" ")[0]
+                        lname = form.employee_filter.data.split(" ")[1]
+                        emloyee_id=get_employee_id_from_fname_lname(fname,lname)
+
+                        query ='SELECT * FROM Shift WHERE ID = ?'
+                        cur.execute(query, (emloyee_id,))
+                        shifts=cur.fetchall()
+                        conn.commit()
+                        cur.close()
+                        return render_template('timecard_data.html',shifts=shifts, employee_full_name=employee_full_name)
+                        
+                        
                 return render_template('timecard.html', form=form)
 
 
         @app.route('/shift/add_shit', methods=['GET', 'POST'])
         def add_shift():
                 form = Add_shift_form()
+                 # Populate drop down dynamically
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
+                employees = cur.fetchall()
+                employees_list=[(employee['Fname'] + " " + employee['Lname']) for employee in employees]
+                employees_list.insert(0,"")
                 form.employee_filter.choices = employees_list
                 if form.validate_on_submit():
-                        conn = sqlite3.connect("instance/flaskr.sqlite")
-                        conn.row_factory = dict_factory
-                        cur = conn.cursor()
                         # calculating the next shift id to be added
                         cur.execute('''
                                 SELECT MAX(ShiftID)
@@ -292,12 +326,7 @@ def create_app(test_config=None):
                         # calculating employee id from fname and lastname
                         fname = form.employee_filter.data.split(" ")[0]
                         lname = form.employee_filter.data.split(" ")[1]
-                        query = ''' SELECT EmployeeID
-                                 FROM Employee
-                                 WHERE Fname = ? AND Lname = ?''' 
-
-                        cur.execute(query,(fname,lname))
-                        emloyee_id = cur.fetchall()[0]['EmployeeID']
+                        emloyee_id=get_employee_id_from_fname_lname(fname,lname)
                         # Now that we have shiftID and employeeID we can generate the new shift
                         query = 'insert into Shift VALUES (?, ?, ?, ?, ?)'
                         cur.execute(query, (emloyee_id,next_shift_id_to_be_added,form.shift_start_time.data,form.sift_end_time.data,form.date_of_shift.data))
