@@ -290,34 +290,22 @@ def create_app(test_config=None):
                         max_shift_id = Shift_ID_dictionary[0]['MAX(ShiftID)']
                         next_shift_id_to_be_added = str(int(max_shift_id)+1)
                         # calculating employee id from fname and lastname
-                        employee_full_name = form.employee_filter.data
-                        employee_full_name_list = employee_full_name.split(" ")
-                        # print(employee_full_name_list[0])
-                        # print(type(employee_full_name_list[0]))
-                        # print(employee_full_name_list[1])
-                        # query = ''' SELECT EmployeeID
-                        #          FROM Employee
-                        #          WHERE Fname LIKE %"Emma"% '''
-                        #         #   +'"'+ employee_full_name_list[0] +'"' 
+                        fname = form.employee_filter.data.split(" ")[0]
+                        lname = form.employee_filter.data.split(" ")[1]
+                        query = ''' SELECT EmployeeID
+                                 FROM Employee
+                                 WHERE Fname = ? AND Lname = ?''' 
 
-                        # cur.execute(query)
-                        # emloyee_id = cur.fetchone
-                        # print(emloyee_id)
-                        
-                
-                        # Employee_id_dict = list(c.fetchall())
-                        # EMPLOYEE_ID = str(int(Employee_id_dict[0][0]) + 1)
-                        # query = 'insert into Shift VALUES (?, ?, ?, ?, ?, ?, ?,?)'
-                        # c.execute(query, 
-                        # (EMPLOYEE_ID,
-                        #         form.employee_SIN.data,
-                        #         form.employee_date_of_birth.data,
-                        #         form.employee_first_name.data,
-                
-                        #         form.shift_start_time.data,
-                        #         form.sift_end_time.data,
-                        #         form.date_of_shift.data))
-                        
+                        cur.execute(query,(fname,lname))
+                        emloyee_id = cur.fetchall()[0]['EmployeeID']
+                        # Now that we have shiftID and employeeID we can generate the new shift
+                        query = 'insert into Shift VALUES (?, ?, ?, ?, ?)'
+                        cur.execute(query, (emloyee_id,next_shift_id_to_be_added,form.shift_start_time.data,form.sift_end_time.data,form.date_of_shift.data))
+                        conn.commit()
+                        cur.close()
+
+                        flash(f'Shift {next_shift_id_to_be_added} was added for {fname} {lname}', 'success')
+                        return redirect(url_for('add_shift'))
                 return render_template('add_shift.html', form=form)
 
         
