@@ -193,6 +193,13 @@ BEGIN
        
 END;
 
+CREATE TRIGGER update_vacation_pay
+    AFTER UPDATE OF PercentageofGrossPay ON vacation
+    FOR EACH ROW 
+BEGIN 
+    UPDATE vacation
+    SET TotalVacationEarned = 1.2*(TotalVacationEarned);
+END;
 
 
 /*EMPLOYEE REPORT - JOIN QUERY*/
