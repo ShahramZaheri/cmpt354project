@@ -149,7 +149,9 @@ def create_app(test_config=None):
 
                         return redirect(url_for('update_fill_out', fname = fname , lname = lname))
                         
-                        
+                
+                conn.commit()
+                cur.close()
                 
                 return render_template('update_employee_info.html',form=drop_down_form)
 
@@ -179,13 +181,13 @@ def create_app(test_config=None):
                 current_vals = cur.fetchall()
 
                 # fill out the form with the current values
-                update_form.employee_Address.data = current_vals[0]['Address']
+                update_form.employee_Address.data = str(current_vals[0]['Address'])
                 update_form.employee_first_name.data = fname
-                update_form.employee_middle_name.data = current_vals[0]['Mname']
+                update_form.employee_middle_name.data = str(current_vals[0]['Mname'])
                 update_form.employee_last_name.data = lname
-                update_form.employee_SIN.data = current_vals[0]['SIN']
-                update_form.employee_phone.data = current_vals[0]['PhoneNumber']
-                update_form.employee_date_of_birth.data = current_vals[0]['DateofBirth']
+                update_form.employee_SIN.data = str(current_vals[0]['SIN'])
+                update_form.employee_phone.data = str(current_vals[0]['PhoneNumber'])
+                update_form.employee_date_of_birth.data = str(current_vals[0]['DateofBirth'])
 
                 # query the Office table to see if what department the employee is in
                 query = "SELECT * FROM Office WHERE ID = ?"
@@ -204,7 +206,14 @@ def create_app(test_config=None):
 
                 full_name = fname + " " + lname 
 
-                if 
+                if update_form.validate_on_submit():
+                        #update the info
+
+                        conn.commit()
+                        cur.close()
+                        print ('hey')
+
+
                 conn.commit()
                 cur.close()
 
