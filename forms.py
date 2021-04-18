@@ -12,10 +12,24 @@ class NewEmployeeForm(FlaskForm):
     employee_phone = StringField('Phone Number', validators=[DataRequired(), Length(min=1, max=20)])
     employee_Address= StringField('Home Address', validators=[DataRequired(), Length(min=1, max=100)])
     employee_date_of_birth = StringField('Date of Birth', validators=[DataRequired(), Length(min=1, max=25)])
-    roles=["office", "operation"]
+    roles=["Office", "Operation"]
     employee_role = SelectField('Department', choices = roles, validators = [DataRequired()])
     employee_salary = DecimalField('Salary/Wage', places=2, validators=[DataRequired()])
     submit = SubmitField('Add New Employee')
+
+class UpdateEmployeeFilloutFrom(FlaskForm):
+    employee_first_name = StringField('First Name', validators=[DataRequired(), Length(min=1, max=100)]) 
+    employee_middle_name = StringField('Middle Name',validators=[ Length(max=100)]) 
+    employee_last_name = StringField('Last Name', validators=[DataRequired(), Length(min=1, max=100)])
+    employee_SIN = StringField('Social Insurance Number (SIN)', validators=[DataRequired(), Length(min=9, max=9)])
+    employee_phone = StringField('Phone Number', validators=[DataRequired(), Length(min=1, max=20)])
+    employee_Address= StringField('Home Address', validators=[DataRequired(), Length(min=1, max=100)])
+    employee_date_of_birth = StringField('Date of Birth', validators=[DataRequired(), Length(min=1, max=25)])
+    employee_role = SelectField('Department', coerce=str, validators = [DataRequired()])
+    employee_salary = DecimalField('Salary/Wage', places=2, validators=[DataRequired()])
+    submit = SubmitField('Save Changes')
+
+
 
 class PayrollForm(FlaskForm):
     employee_filter = SelectField('Employee', coerce=str)
@@ -24,7 +38,7 @@ class PayrollForm(FlaskForm):
     submit = SubmitField('Get Pay Stubs')
 
 class Add_shift_form(FlaskForm):
-    employee_filter = SelectField('Employee', coerce=str)
+    employee_filter = SelectField('Employee', validators = [DataRequired()])
     date_of_shift = DateField('Date of Shift',format='%Y-%m-%d', validators = [DataRequired()])
     options=[]
     for i in range(1,25):
@@ -38,10 +52,10 @@ class get_shifts_form(FlaskForm):
     submit = SubmitField('Get Timecards')
 
 class RemoveContactForm(FlaskForm):
-    submit = SubmitField('DELETE')
+    submit = SubmitField('Delete')
 
 class RemoveEmployeeForm(FlaskForm):
-    submit = SubmitField('DELETE')
+    submit = SubmitField('Delete')
 
 class ContactForm(FlaskForm):
     emergency_contact_employee = SelectField('Employee', coerce=str)
@@ -51,7 +65,7 @@ class ContactForm(FlaskForm):
     submit = SubmitField('Add Contact')
 
 class update_employee_info_form(FlaskForm):
-    employee_SIN = StringField('Social Insurance Number (SIN)', validators=[DataRequired(), Length(min=1, max=25)])
-    submit = SubmitField('Find Employee')
+    employee_update  = SelectField('Select the employee you would like to update', coerce=str)
+    submit = SubmitField('Update')
 
 
