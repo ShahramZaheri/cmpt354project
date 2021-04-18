@@ -10,7 +10,7 @@ class NewEmployeeForm(FlaskForm):
     employee_last_name = StringField('Last Name', validators=[DataRequired(), Length(min=1, max=100)])
     employee_SIN = StringField('Social Insurance Number (SIN)', validators=[DataRequired(), Length(min=9, max=9)])
     employee_phone = StringField('Phone Number', validators=[DataRequired(), Length(min=1, max=20)])
-    employee_Address= StringField('Home Address', validators=[DataRequired(), Length(min=1, max=100)])
+    employee_Address= StringField('Home Address', validators=[Length(min=0, max=100)])
     employee_date_of_birth = StringField('Date of Birth', validators=[DataRequired(), Length(min=1, max=25)])
     roles=["office", "operation"]
     employee_role = SelectField('Department', choices = roles, validators = [DataRequired()])
