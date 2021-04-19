@@ -172,8 +172,10 @@ def create_app(test_config=None):
                         WHERE Fname = ? AND Lname = ? 
                         '''
                 cur.execute(query,(fname,lname))
-                ID = cur.fetchall()[0]['EmployeeID']
-
+                tmp = cur.fetchall()
+                ID = tmp [0]['EmployeeID']
+                print (tmp)
+                print ("size of tmp: "+ str(len(tmp)))
                 # get the employee's info 
                 query = '''SELECT *, PhoneNumber FROM Employee, Phone 
                            WHERE EmployeeID = ? AND Phone.ID = Employee.EmployeeID'''
@@ -243,7 +245,7 @@ def create_app(test_config=None):
 
                         # reflect changes in Operations and Office tables 
                         # if statemeants are used because SQL Tables can not be variables
-                        print ("Name: " + update_form.employee_first_name.data + " Selected Role:" + str(update_form.employee_role.data))
+                        print ("Name: " + fname + " Selected Role:" + str(update_form.employee_role.data))
                         if( len(update_form.employee_salary.data) != 0 ):
                                 if (d_name == "Operations"):
                                         query = "DELETE FROM Operations WHERE ID = ?"
