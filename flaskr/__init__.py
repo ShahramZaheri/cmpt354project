@@ -450,7 +450,13 @@ def create_app(test_config=None):
                         new_cheque_number_query = '''Select MAX(ChequeNumber) From Payroll'''
                         cur.execute(new_cheque_number_query)
                         new_cheque_number = cur.fetchall()
-                        new_cheque_number = int(new_cheque_number[0]['MAX(ChequeNumber)'])+1
+                        print ("length of cheque num " + str(len(new_cheque_number)))
+
+                        if (len(new_cheque_number) == 1):
+                                new_cheque_number = 10000
+                        else:
+                                print (new_cheque_number[0]['MAX(ChequeNumber)'])
+                                new_cheque_number = int(new_cheque_number[0]['MAX(ChequeNumber)'])+1
 
                         insert_query = '''INSERT INTO Payroll VALUES (?,?,?,?,?,?,?,?)'''
 
