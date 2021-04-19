@@ -280,14 +280,6 @@ def create_app(test_config=None):
 
                 return render_template('update_fill_out.html', form = update_form, name = full_name)#, form = form, name = name)
 
-
-
-
-
-
-
-                form=update_employee_info_form()
-                return render_template('update_employee_info.html',form=form)
         
         @app.route('/employee/ex_employee_info', methods=['GET', 'POST'])
         def ex_employee_info():

@@ -19,13 +19,13 @@ class NewEmployeeForm(FlaskForm):
 
 class UpdateEmployeeFilloutFrom(FlaskForm):
     # new values entered in here
-    employee_first_name = StringField('First Name', validators= [Length(min=1, max=100)]) 
+    employee_first_name = StringField('First Name', validators= [Length( max=100)]) 
     employee_middle_name = StringField('Middle Name',validators= [Length(max=100)]) 
-    employee_last_name = StringField('Last Name', validators= [Length(min=1, max=100)])
-    employee_SIN = StringField('Social Insurance Number (SIN)', validators= [Length(min=9, max=9)])
-    employee_phone = StringField('Phone Number', validators= [Length(min=1, max=20)])
-    employee_Address= StringField('Home Address', validators= [Length(min=1, max=100)])
-    employee_date_of_birth = StringField('Date of Birth', validators= [Length(min=1, max=25)])
+    employee_last_name = StringField('Last Name', validators= [Length( max=100)])
+    employee_SIN = StringField('Social Insurance Number (SIN)', validators= [Length( max=9)])
+    employee_phone = StringField('Phone Number', validators= [Length(max=20)])
+    employee_Address= StringField('Home Address', validators= [Length( max=100)])
+    employee_date_of_birth = StringField('Date of Birth', validators= [Length( max=25)])
 
     employee_role = SelectField('Department')
     employee_salary = StringField('Salary/Wage')
