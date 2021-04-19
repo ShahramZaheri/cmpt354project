@@ -39,6 +39,18 @@ def create_app(test_config=None):
                         d[col[0]] = row[idx]
                 return d
         
+        def getEmployeeID(fname,lname):
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                query = ''' SELECT EmployeeID
+                                 FROM Employee
+                                 WHERE Fname = ? AND Lname = ?''' 
+
+                cur.execute(query,(fname,lname))
+                employee_id = cur.fetchall()[0]['EmployeeID']
+                return employee_id
+        
 
         @app.route('/')
         def index():
@@ -432,7 +444,7 @@ def create_app(test_config=None):
                 if generate_pay_stub_form.validate_on_submit():
                         fname = generate_pay_stub_form.employee_filter_pay_stub.data.split(" ")[0]
                         lname = generate_pay_stub_form.employee_filter_pay_stub.data.split(" ")[1]
-                        employee_id = get_employee_id_from_fname_lname(fname,lname)
+                        employee_id = getEmployeeID(fname,lname)
 
                         department, pay = get_department_and_pay_from_employee_id(employee_id)          # pay can be salary or wage
                         start = generate_pay_stub_form.start_date.data
@@ -450,7 +462,13 @@ def create_app(test_config=None):
                         new_cheque_number_query = '''Select MAX(ChequeNumber) From Payroll'''
                         cur.execute(new_cheque_number_query)
                         new_cheque_number = cur.fetchall()
-                        new_cheque_number = int(new_cheque_number[0]['MAX(ChequeNumber)'])+1
+                        print ("length of cheque num " + str(len(new_cheque_number)))
+
+                        if (len(new_cheque_number[0]) == 0):
+                                new_cheque_number = 10000
+                        else:
+                                print (new_cheque_number[0]['MAX(ChequeNumber)'])
+                                new_cheque_number = int(new_cheque_number[0]['MAX(ChequeNumber)'])+1
 
                         insert_query = '''INSERT INTO Payroll VALUES (?,?,?,?,?,?,?,?)'''
 
@@ -462,14 +480,18 @@ def create_app(test_config=None):
                         flash('New Pay Stub Generated', 'success')
 
                 elif form.validate_on_submit():
+                        fname = form.employee_filter.data.split(" ")[0]
+                        lname = form.employee_filter.data.split(" ")[1]
+                        ID = getEmployeeID(fname, lname)
+
+                        # get pay stubs
                         query = '''SELECT E.Fname, E.Lname, P.ChequeNumber, P.PayrollDate, P.GrossPay
                                 FROM Employee E, Payroll P
-                                WHERE P.ID = E.EmployeeID AND E.Fname = ? AND E.Lname = ? AND P.PayrollDate between ? and ? 
+                                WHERE P.ID = ? AND E.EmployeeID = P.ID AND P.PayrollDate between ? and ? 
                                 Order by P.PayrollDate desc
                                 LIMIT ?'''
                         
-                        fname = form.employee_filter.data.split(" ")[0]
-                        lname = form.employee_filter.data.split(" ")[1]
+                        # check which filter is selected
                         if (form.payroll_date_range.data == "YTD"):
                                 #Show pay stubs from start of year
                                 start = TODAYS_DATE[0:4] + "-01-01"
@@ -480,19 +502,21 @@ def create_app(test_config=None):
                                 start = "2000-01-01"
                                 end = TODAYS_DATE
                                 limit = 25
-                        cur.execute(query, (fname,lname,start ,end ,limit))
+                        cur.execute(query, (ID, start ,end ,limit))
                         stubs = cur.fetchall()
 
-                        query = '''SELECT SUM(P.GrossPay)
-                                FROM Employee E, Payroll P
-                                WHERE P.ID = E.EmployeeID AND E.Fname = ? AND E.Lname = ? AND P.PayrollDate between ? and ? LIMIT ?'''
-                        cur.execute(query, (fname,lname,start ,end ,limit))
+                        # get the gross pay
+                        query = '''SELECT SUM(P.GrossPay) as grossPay
+                                FROM Payroll P
+                                WHERE P.ID = ? AND P.PayrollDate between ? and ? LIMIT ?'''
+                        cur.execute(query, (ID, start ,end ,limit))
                         gross_pay = cur.fetchall()
 
+                        print (gross_pay)
                         conn.commit()
                         cur.close()
 
-                        return render_template('payroll_data.html', stubs = stubs, gross_pay = gross_pay[0]['SUM(P.GrossPay)']) 
+                        return render_template('payroll_data.html', stubs = stubs, gross_pay = gross_pay[0]['grossPay']) 
                 return render_template('payroll.html', form = form, generate_pay_stub_form = generate_pay_stub_form)
 
 
@@ -501,20 +525,7 @@ def create_app(test_config=None):
                 #form=NewEmployeeForm()
                 return render_template('tax.html')
 # ################################## shift pages #####################################################
-        
-       
-        
-        def get_employee_id_from_fname_lname(fname,lname):
-                conn = sqlite3.connect("instance/flaskr.sqlite")
-                conn.row_factory = dict_factory
-                cur = conn.cursor()
-                query = ''' SELECT EmployeeID
-                                 FROM Employee
-                                 WHERE Fname = ? AND Lname = ?''' 
 
-                cur.execute(query,(fname,lname))
-                emloyee_id = cur.fetchall()[0]['EmployeeID']
-                return emloyee_id
 
 
         @app.route('/shift', methods=['GET', 'POST'])
@@ -538,7 +549,7 @@ def create_app(test_config=None):
                         employee_full_name = form.employee_filter.data
                         fname = form.employee_filter.data.split(" ")[0]
                         lname = form.employee_filter.data.split(" ")[1]
-                        emloyee_id=get_employee_id_from_fname_lname(fname,lname)
+                        emloyee_id=getEmployeeID(fname,lname)
 
                         query ='SELECT * FROM Shift WHERE ID = ?'
                         cur.execute(query, (emloyee_id,))
@@ -576,7 +587,7 @@ def create_app(test_config=None):
                         # calculating employee id from fname and lastname
                         fname = form.employee_filter.data.split(" ")[0]
                         lname = form.employee_filter.data.split(" ")[1]
-                        emloyee_id=get_employee_id_from_fname_lname(fname,lname)
+                        emloyee_id=getEmployeeID(fname,lname)
                         # Now that we have shiftID and employeeID we can generate the new shift
                         query = 'insert into Shift VALUES (?, ?, ?, ?, ?)'
                         cur.execute(query, (emloyee_id,next_shift_id_to_be_added,form.shift_start_time.data,form.sift_end_time.data,form.date_of_shift.data))
