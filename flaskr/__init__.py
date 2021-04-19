@@ -39,6 +39,22 @@ def create_app(test_config=None):
                         d[col[0]] = row[idx]
                 return d
         
+        # Returns EmployeeID given first and last name
+        def getEmployeeID(fname,lname):
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                query = ''' SELECT EmployeeID
+                                        FROM Employee
+                                        WHERE Fname = ? AND Lname = ?''' 
+
+                cur.execute(query,(fname,lname))
+                employee_id = cur.fetchall()[0]['EmployeeID']
+                conn.commit()
+                cur.close()
+
+                return employee_id
+
 
         @app.route('/')
         def index():
@@ -46,7 +62,7 @@ def create_app(test_config=None):
 
         
 
-#################################################################################### Employee Pages 
+######################################################################################### Employee Pages 
 
         @app.route('/employee', methods=['GET', 'POST'])
         def employee():
@@ -166,16 +182,8 @@ def create_app(test_config=None):
                 cur = conn.cursor()
 
                 # get the ID for the selected employee
-                query = '''
-                        SELECT E.EmployeeID
-                        FROM Employee E
-                        WHERE Fname = ? AND Lname = ? 
-                        '''
-                cur.execute(query,(fname,lname))
-                tmp = cur.fetchall()
-                ID = tmp [0]['EmployeeID']
-                print (tmp)
-                print ("size of tmp: "+ str(len(tmp)))
+                ID = getEmployeeID(fname, lname)
+                
                 # get the employee's info 
                 query = '''SELECT *, PhoneNumber FROM Employee, Phone 
                            WHERE EmployeeID = ? AND Phone.ID = Employee.EmployeeID'''
@@ -238,10 +246,6 @@ def create_app(test_config=None):
                                 format_number = "(" + first + ") " + second + "-" + third
                                 cur.execute("UPDATE Phone SET PhoneNumber = ? WHERE ID = ?", (format_number, ID) )
 
-                        
-                
-                        
-                        
 
                         # reflect changes in Operations and Office tables 
                         # if statemeants are used because SQL Tables can not be variables
@@ -279,26 +283,9 @@ def create_app(test_config=None):
 
                 conn.commit()
                 cur.close()
-
                 return render_template('update_fill_out.html', form = update_form, name = full_name)#, form = form, name = name)
 
         
-        @app.route('/employee/ex_employee_info', methods=['GET', 'POST'])
-        def ex_employee_info():
-                conn = sqlite3.connect("instance/flaskr.sqlite")
-                conn.row_factory = dict_factory
-                cur = conn.cursor()
-                cur.execute("SELECT * FROM exEmployees")
-                exEmployees = cur.fetchall()
-                conn.commit()
-                
-                return render_template('exEmployeesInfo.html',exEmployees=exEmployees)
-
-        @app.route('/report')
-        def report():
-                return render_template('report.html')
-        
-
         @app.route('/employee/remove_employee', methods=['GET', 'POST'])
         def removeEmployee():
                 form = RemoveEmployeeForm()
@@ -333,10 +320,28 @@ def create_app(test_config=None):
                         cur.close()
                         return redirect(url_for('removeEmployee'))
                 
+                conn.commit()
+                cur.close()
                 return render_template('removeEmployee.html', form=form, employees = employees)
 
+######################################################################################### Report Pages 
 
-#################################################################################### Report Pages 
+        @app.route('/report')
+        def report():
+                return render_template('report.html')
+
+        @app.route('/employee/ex_employee_info', methods=['GET', 'POST'])
+        def ex_employee_info():
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                cur.execute("SELECT * FROM exEmployees")
+                exEmployees = cur.fetchall()
+                conn.commit()
+                cur.close()
+                return render_template('exEmployeesInfo.html',exEmployees=exEmployees)
+
+        
         @app.route('/report/employeeinfo', methods=['GET', 'POST'])
         def employeeinfo():
                 conn = sqlite3.connect("instance/flaskr.sqlite")
@@ -398,20 +403,25 @@ def create_app(test_config=None):
                                 start = "2000-01-01"
                                 end = TODAYS_DATE
                                 limit = 25
+
                         cur.execute(query, (fname,lname,start ,end ,limit))
                         stubs = cur.fetchall()
 
+                        ID = getEmployeeID(fname, lname)
 
                         query = '''SELECT SUM(P.GrossPay)
-                                FROM Employee E, Payroll P
-                                WHERE P.ID = E.EmployeeID AND E.Fname = ? AND E.Lname = ? AND P.PayrollDate between ? and ? LIMIT ?'''
-                        cur.execute(query, (fname,lname,start ,end ,limit))
+                                FROM Payroll P
+                                WHERE P.ID = ? GROUP BY P.ID LIMIT ?'''
+                        cur.execute(query, (ID,limit))
 
                         gross_pay = cur.fetchall()
                         conn.commit()
                         cur.close()
 
-                        return render_template('payroll_data.html', stubs = stubs, gross_pay = gross_pay[0]['SUM(P.GrossPay)'])  
+                        return render_template('payroll_data.html', stubs = stubs, gross_pay = gross_pay[0]['SUM(P.GrossPay)'])
+
+                conn.commit()
+                cur.close()  
                 return render_template('payroll.html', form = form)
 
 
@@ -419,26 +429,12 @@ def create_app(test_config=None):
         def tax():
                 #form=NewEmployeeForm()
                 return render_template('tax.html')
-# ################################## shift pages #####################################################
-        
-       
-        
-        def get_employee_id_from_fname_lname(fname,lname):
-                conn = sqlite3.connect("instance/flaskr.sqlite")
-                conn.row_factory = dict_factory
-                cur = conn.cursor()
-                query = ''' SELECT EmployeeID
-                                 FROM Employee
-                                 WHERE Fname = ? AND Lname = ?''' 
 
-                cur.execute(query,(fname,lname))
-                emloyee_id = cur.fetchall()[0]['EmployeeID']
-                return emloyee_id
 
+######################################################################################### Shift pages
 
         @app.route('/shift', methods=['GET', 'POST'])
         def shift():
-                
                 return render_template('shift.html')
 
         @app.route('/shift/timecard', methods=['GET', 'POST'])
@@ -457,7 +453,7 @@ def create_app(test_config=None):
                         employee_full_name = form.employee_filter.data
                         fname = form.employee_filter.data.split(" ")[0]
                         lname = form.employee_filter.data.split(" ")[1]
-                        emloyee_id=get_employee_id_from_fname_lname(fname,lname)
+                        emloyee_id=getEmployeeID(fname,lname)
 
                         query ='SELECT * FROM Shift WHERE ID = ?'
                         cur.execute(query, (emloyee_id,))
@@ -470,7 +466,7 @@ def create_app(test_config=None):
                 return render_template('timecard.html', form=form)
 
 
-        @app.route('/shift/add_shit', methods=['GET', 'POST'])
+        @app.route('/shift/add_shift', methods=['GET', 'POST'])
         def add_shift():
                 form = Add_shift_form()
                  # Populate drop down dynamically
@@ -495,7 +491,7 @@ def create_app(test_config=None):
                         # calculating employee id from fname and lastname
                         fname = form.employee_filter.data.split(" ")[0]
                         lname = form.employee_filter.data.split(" ")[1]
-                        emloyee_id=get_employee_id_from_fname_lname(fname,lname)
+                        emloyee_id=getEmployeeID(fname,lname)
                         # Now that we have shiftID and employeeID we can generate the new shift
                         query = 'insert into Shift VALUES (?, ?, ?, ?, ?)'
                         cur.execute(query, (emloyee_id,next_shift_id_to_be_added,form.shift_start_time.data,form.sift_end_time.data,form.date_of_shift.data))
@@ -507,7 +503,8 @@ def create_app(test_config=None):
                 return render_template('add_shift.html', form=form)
 
         
-#################################################################################### Emergency Contact Pages 
+######################################################################################### Emergency Contact Pages 
+
         @app.route('/emergency', methods=['GET', 'POST'])
         def emergency():
                 connection = sqlite3.connect("instance/flaskr.sqlite")
@@ -622,11 +619,18 @@ def create_app(test_config=None):
 
                 return(render_template('delete_emergency_contact.html', form = form, emergency_contacts = emergency_contacts))
 
+######################################################################################### Vacaton Pages
+
+        @app.route('/vacation')
+        def vacation():
 
 
-        
+                return render_template('vacation.html')
 
+
+
+
+# initialize app and database
         from . import db
         db.init_app(app)
-
         return(app)

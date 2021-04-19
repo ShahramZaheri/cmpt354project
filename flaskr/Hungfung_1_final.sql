@@ -88,22 +88,16 @@ CREATE TABLE Shift(
     );
 
 
-
-
 CREATE TABLE Phone(
     PhoneNumber CHAR(20) NOT NULL,
     ID char(7) NOT NULL,
     PRIMARY KEY(PhoneNumber, ID),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
     ON DELETE CASCADE
-);
+    );
 
 
-
-
-
-
-/*insert values*/
+/*initial values*/
 
 INSERT INTO Employee (EmployeeID, SIN, DateofBirth, DateofHire, Fname, Mname, Lname, Address)
 VALUES (0001, 897586446, '1987-01-09', '2018-04-26', 'Jack', 'Young', 'Ma', '8990 Alpha Street'),
