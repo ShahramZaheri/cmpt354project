@@ -18,15 +18,18 @@ class NewEmployeeForm(FlaskForm):
     submit = SubmitField('Add New Employee')
 
 class UpdateEmployeeFilloutFrom(FlaskForm):
-    employee_first_name = StringField('First Name', validators=[DataRequired(), Length(min=1, max=100)]) 
-    employee_middle_name = StringField('Middle Name',validators=[ Length(max=100)]) 
-    employee_last_name = StringField('Last Name', validators=[DataRequired(), Length(min=1, max=100)])
-    employee_SIN = StringField('Social Insurance Number (SIN)', validators=[DataRequired(), Length(min=9, max=9)])
-    employee_phone = StringField('Phone Number', validators=[DataRequired(), Length(min=1, max=20)])
-    employee_Address= StringField('Home Address', validators=[DataRequired(), Length(min=1, max=100)])
-    employee_date_of_birth = StringField('Date of Birth', validators=[DataRequired(), Length(min=1, max=25)])
-    employee_role = SelectField('Department', coerce=str, validators = [DataRequired()])
-    employee_salary = DecimalField('Salary/Wage', places=2, validators=[DataRequired()])
+    # new values entered in here
+    employee_first_name = StringField('First Name', validators= [Length(min=1, max=100)]) 
+    employee_middle_name = StringField('Middle Name',validators= [Length(max=100)]) 
+    employee_last_name = StringField('Last Name', validators= [Length(min=1, max=100)])
+    employee_SIN = StringField('Social Insurance Number (SIN)', validators= [Length(min=9, max=9)])
+    employee_phone = StringField('Phone Number', validators= [Length(min=1, max=20)])
+    employee_Address= StringField('Home Address', validators= [Length(min=1, max=100)])
+    employee_date_of_birth = StringField('Date of Birth', validators= [Length(min=1, max=25)])
+
+    employee_role = SelectField('Department')
+    employee_salary = StringField('Salary/Wage')
+
     submit = SubmitField('Save Changes')
 
 

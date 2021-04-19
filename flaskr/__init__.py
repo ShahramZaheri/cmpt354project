@@ -5,7 +5,7 @@ from datetime import datetime
 
 from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import NewEmployeeForm, update_employee_info_form, RemoveEmployeeForm, UpdateEmployeeFilloutFrom ,PayrollForm, ContactForm, RemoveContactForm, Add_shift_form, get_shifts_form
-
+from wtforms.fields import Label 
 
 
 TODAYS_DATE = datetime.today().strftime('%Y-%m-%d')
@@ -180,38 +180,99 @@ def create_app(test_config=None):
                 cur.execute(query , (ID))
                 current_vals = cur.fetchall()
 
-                # fill out the form with the current values
-                update_form.employee_Address.data = str(current_vals[0]['Address'])
-                update_form.employee_first_name.data = fname
-                update_form.employee_middle_name.data = str(current_vals[0]['Mname'])
-                update_form.employee_last_name.data = lname
-                update_form.employee_SIN.data = str(current_vals[0]['SIN'])
-                update_form.employee_phone.data = str(current_vals[0]['PhoneNumber'])
-                update_form.employee_date_of_birth.data = str(current_vals[0]['DateofBirth'])
+                # display current values 
+                update_form.employee_Address.label.text = str(current_vals[0]['Address'])
+                update_form.employee_first_name.label.text = fname
+                update_form.employee_middle_name.label.text = str(current_vals[0]['Mname'])
+                update_form.employee_last_name.label.text = lname
+                update_form.employee_SIN.label.text = str(current_vals[0]['SIN'])
+                update_form.employee_phone.label.text = str(current_vals[0]['PhoneNumber'])
+                update_form.employee_date_of_birth.label.text = str(current_vals[0]['DateofBirth'])
+                update_form.employee_first_name.label.text = fname
+              
 
-                # query the Office table to see if what department the employee is in
+                # query the Office table to see what department the employee is in
                 query = "SELECT * FROM Office WHERE ID = ?"
                 cur.execute(query,(ID))
                 Department = cur.fetchall()
 
                 # query is empty, employee is in operations
                 if(len(Department) == 0):
+                        d_name = 'Operations'
+                        update_form.employee_role.label.text = 'Operations'
                         update_form.employee_role.choices = ['Operations', 'Office']
                         cur.execute("SELECT WagePerHour From Operations Where ID = ?", (ID))
                         wage = cur.fetchall()[0]['WagePerHour']
-                        update_form.employee_salary.data = wage
+                        update_form.employee_salary.label.text = wage
                 else:
-                        update_form.employee_role.choices = ['Office',  'Operations']
-                        update_form.employee_salary.data = Department[0]['Salary']
+                        d_name = 'Office'
+                        update_form.employee_role.label.text= 'Office'
+                        update_form.employee_role.choices = ['Office', 'Operations']
+                        update_form.employee_salary.label.text = Department[0]['Salary']
 
                 full_name = fname + " " + lname 
 
                 if update_form.validate_on_submit():
-                        #update the info
+                        # check which fields have changed and update them
+                        
+                        if (len(update_form.employee_SIN.data) != 0):
+                                cur.execute("Update Employee SET SIN = ? WHERE EmployeeID = ?" ,( update_form.employee_SIN.data, ID))
+                        if (len(update_form.employee_date_of_birth.data) != 0):
+                                cur.execute("Update Employee SET DateofBirth = ? WHERE EmployeeID = ?" , (update_form.employee_date_of_birth.data , ID))
+                        if (len(update_form.employee_first_name.data) != 0):
+                                cur.execute("Update Employee SET Fname = ? WHERE EmployeeID = ?" , (update_form.employee_first_name.data, ID))
+                        if (len(update_form.employee_last_name.data) != 0):
+                                cur.execute("Update Employee SET Lname = ? WHERE EmployeeID = ?" ,( update_form.employee_last_name.data, ID))
+                        if (len(update_form.employee_middle_name.data) != 0):
+                                cur.execute("Update Employee SET Mname = ? WHERE EmployeeID = ?" , (update_form.employee_middle_name.data, ID))
+                        if (len(update_form.employee_Address.data) != 0):
+                                cur.execute("Update Employee SET Address = ? WHERE EmployeeID = ?" , (update_form.employee_Address.data, ID))
+                        if (len(update_form.employee_phone.data) != 0):
+                                # format phone number before adding to DB
+                                tmp = update_form.employee_phone.data
+                                first = tmp[0:3]
+                                second = tmp[3:6]
+                                third = tmp[6:10]
+                                format_number = "(" + first + ") " + second + "-" + third
+                                cur.execute("UPDATE Phone SET PhoneNumber = ? WHERE ID = ?", (format_number, ID) )
 
+                        
+                
+                        
+                        
+
+                        # reflect changes in Operations and Office tables 
+                        # if statemeants are used because SQL Tables can not be variables
+                        print ("Name: " + update_form.employee_first_name.data + " Selected Role:" + str(update_form.employee_role.data))
+                        if( len(update_form.employee_salary.data) != 0 ):
+                                if (d_name == "Operations"):
+                                        query = "DELETE FROM Operations WHERE ID = ?"
+                                        cur.execute(query, (ID))
+                                        
+
+                                        if (update_form.employee_role.data == 'Office'):
+                                                query = "INSERT INTO Office VALUES(?, ?)"
+                                                cur.execute(query, (ID ,update_form.employee_salary.data))
+                                        else:
+                                                query = "INSERT INTO Operations VALUES(?, ?)"
+                                                cur.execute(query, (ID ,update_form.employee_salary.data))
+                                                
+                                else:
+                                        query = "DELETE FROM Office WHERE ID = ?"
+                                        cur.execute(query, (ID))
+                                        
+
+                                        if (update_form.employee_role.data == 'Office'):
+                                                query = "INSERT INTO Office VALUES(?, ?)"
+                                                cur.execute(query, (ID ,update_form.employee_salary.data))
+                                        else:
+                                                query = "INSERT INTO Operations VALUES(?, ?)"
+                                                cur.execute(query, (ID ,update_form.employee_salary.data))
+
+                
                         conn.commit()
                         cur.close()
-                        print ('hey')
+                        return(redirect(url_for('update_employee_info')))
 
 
                 conn.commit()
