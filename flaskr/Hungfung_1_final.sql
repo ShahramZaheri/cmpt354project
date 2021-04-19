@@ -65,7 +65,7 @@ CREATE TABLE Operations(
     );
 
 CREATE TABLE Payroll(
-    ChequeNumber char(10) NOT NULL,
+    ChequeNumber int(10) NOT NULL,
     PayrollDate Date NOT NULL,
     GrossPay float(20) NOT NULL,
     CPP float NOT NULL,
@@ -102,14 +102,14 @@ CREATE TABLE Phone(
 
 
 
+/*------------------------------------ Initial Values ------------------------------------------*/
+
 INSERT INTO Employee (EmployeeID, SIN, DateofBirth, DateofHire, Fname, Mname, Lname, Address)
 VALUES (0001, 897586446, '1987-01-09', '2018-04-26', 'Jack', 'Young', 'Ma', '8990 Alpha Street'),
 	   (0002, 397486256, '1987-04-28', '2010-03-23', 'Emma', 'Yye', 'Zhang', '8990 Beta Street'),
 	   (0003, 296586884, '1980-09-01', '2012-05-16', 'Alan', 'Zhu', 'Kit', '1990 Nova Street'),
 	   (0004, 697086464, '1970-03-21', '2013-01-04', 'Wilson', 'Stephan', 'Kit', '3090 Crew Street'),
        (0005, 197526335, '1990-02-09', '2015-07-07', 'Sharon', 'Yao', 'Wang', '1990 Walter Street');
-
-
 
 
 INSERT INTO EmergencyContact  (ContactName, PhoneNumber, Relation, ID)
@@ -129,38 +129,6 @@ VALUES (0003, 20),
        (0004, 18),
        (0005, 17);
 
-INSERT INTO Payroll(ChequeNumber, PayrollDate, GrossPay, CPP, EI, FederalTax, ProvincialTax, ID)
-VALUES (10001,'2021-03-25',5000,12,23,15,16,0001),
-	   (10002,'2021-03-15',6000,12,23,15,16,0002),
-       (10003,'2021-03-05',5000,12,23,15,16,0001),
-       (10004,'2021-02-20',5000,12,23,15,16,0001),
-       (10005,'2021-02-05',5000,12,23,15,16,0001),
-       (10006,'2021-01-15',5000,12,23,15,16,0001),
-       (10007,'2021-01-01',5000,12,23,15,16,0001),
-       (10008,'2020-12-15',5000,12,23,15,16,0001),
-       (10009,'2020-12-01',5000,12,23,15,16,0001),
-       (10010,'2020-11-10',5000,12,23,15,16,0001),
-       (10011,'2020-03-15',6000,12,23,15,16,0002),
-       (100031,'2020-03-05',5000,12,23,15,16,0004),
-       (100041,'2020-02-20',5000,12,23,15,16,0004),
-       (100051,'2020-02-05',5000,12,23,15,16,0004),
-       (100061,'2020-01-15',5000,12,23,15,16,0001),
-       (100071,'2020-01-01',5000,12,23,15,16,0001),
-       (100081,'2019-12-15',5000,12,23,15,16,0001),
-       (100091,'2019-12-01',5000,12,23,15,16,0001),
-       (100103,'2019-11-10',5000,12,23,15,16,0001),
-       (100084,'2018-12-15',5000,12,23,15,16,0001),
-       (100093,'2018-12-01',5000,12,23,15,16,0001),
-       (100105,'2018-11-10',5000,12,23,15,16,0001),
-       (100022,'2018-03-15',6000,12,23,15,16,0002),
-       (100039,'2018-03-05',5000,12,23,15,16,0001),
-       (100040,'2018-02-20',5000,12,23,15,16,0001),
-       (100050,'2018-02-05',5000,12,23,15,16,0001),
-       (100060,'2018-01-15',5000,12,23,15,16,0001),
-       (100070,'2018-01-01',5000,12,23,15,16,0001),
-       (100080,'2015-12-15',5000,12,23,15,16,0001),
-       (100090,'2015-12-01',5000,12,23,15,16,0001),
-       (100107,'2015-11-10',5000,12,23,15,16,0001);
 
 INSERT INTO Phone(PhoneNumber, ID)
 VALUES ('(778) 789-5645', 0001),
@@ -176,11 +144,14 @@ VALUES(0001,2000,0.4,2000,0, 10003),
 	  (0001,5100,0.6,2100,3000, 10006);
 
 INSERT INTO Shift(ID, ShiftID, StartTime, EndTime, DateofShift)
-VALUES(0001,100,'12:20:01','18:10:02','2021-03-10'),
-      (0002,101,'11:20:01','15:10:02','2021-03-10'),
-      (0003,102,'09:20:01','14:10:06','2021-03-10'),
-      (0004,103,'12:00:00','16:00:00','2021-03-10'),
-      (0005,104,'12:40:01','18:10:02','2021-03-10');
+VALUES(0003,100,12,18,'2021-03-10'),
+      (0003,101,11,15,'2021-04-10'),
+      (0003,102,9,14,'2021-03-15'),
+      (0004,103,12,16,'2021-03-10'),
+      (0004,105,12,16,'2021-03-10'),
+      (0005,104,12,18,'2021-03-10');
+
+
 
 CREATE TRIGGER adding_to_exEmployess
    AFTER DELETE ON Employee
@@ -197,20 +168,4 @@ BEGIN
     UPDATE vacation
     SET TotalVacationEarned = 1.2*(TotalVacationEarned);
 END;
-
-
-/*EMPLOYEE REPORT - JOIN QUERY*/
-/*SELECT employee.EmployeeID, employee.Fname, employee.Lname, DATEDIFF(SYSDATE(), employee.DateofHire)/365
-AS DATEDIFF, Payroll.ID, Payroll.PayrollDate, Payroll.GrossPay, Payroll.CPP, Payroll.EI, Payroll.FederalTax, Payroll.ProvincialTax 
-FROM employee
-INNER JOIN Payroll ON EMPLOYEE.EmployeeID = Payroll.ID;
-
-
-/*Alter vacation pay value */ /*How to do it automatically
-UPDATE vacation SET PercentageofGrossPay=0.6 WHERE vacation.ID IN (
- 		SELECT EmployeeID FROM employee WHERE (DATEDIFF(SYSDATE(), employee.DateofHire)/365)>4 AND employee.EmployeeID = Vacation.ID);
-
-/*Aggregation query - average weekly pay
-SELECT employee.Fname, employee.Lname, payroll.ID, AVG(payroll.GrossPay/48) FROM employee,payroll
-WHERE payroll.ID = employee.EmployeeID; */
 
