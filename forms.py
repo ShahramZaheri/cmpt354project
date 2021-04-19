@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, PasswordField, SubmitField, BooleanField, TextField, TextAreaField, SelectField, DecimalField,DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.fields.html5 import DateField
 
 
 #Form for inserting new employee
@@ -22,6 +23,12 @@ class PayrollForm(FlaskForm):
     options = ["Last 25", "YTD"]
     payroll_date_range = SelectField('Filter Stubs By', choices = options, validators = [DataRequired()])
     submit = SubmitField('Get Pay Stubs')
+
+class GeneratePayStub(FlaskForm):
+    employee_filter_pay_stub = SelectField('Employee', coerce=str)
+    start_date = DateField('Start Date',format='%Y-%m-%d', validators = [DataRequired()])
+    end_date = DateField('End Date',format='%Y-%m-%d', validators = [DataRequired()])
+    generate_pay_stub = SubmitField('Generate Pay Stub')
 
 class Add_shift_form(FlaskForm):
     employee_filter = SelectField('Employee', coerce=str)
