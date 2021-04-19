@@ -224,3 +224,17 @@ UPDATE vacation SET PercentageofGrossPay=0.6 WHERE vacation.ID IN (
 SELECT employee.Fname, employee.Lname, payroll.ID, AVG(payroll.GrossPay/48) FROM employee,payroll
 WHERE payroll.ID = employee.EmployeeID; */
 
+/*Division query*/
+
+
+
+CREATE TABLE EmployeeWithTwoYearsExperience AS 
+SELECT employee.EmployeeID, employee.Fname, employee.Lname, DATEDIFF(SYSDATE(), employee.DateofHire)/365 
+FROM employee
+WHERE DATEDIFF(SYSDATE(), employee.DateofHire)/365 >2;
+
+SELECT * FROM EmployeeWithTwoYearsExperience WHERE NOT EXISTS 
+(SELECT * FROM Office WHERE EmployeewithTwoYearsExperience.EmployeeID = Office.ID )
+);
+
+
