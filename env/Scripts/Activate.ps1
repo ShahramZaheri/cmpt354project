@@ -213,6 +213,8 @@ deactivate -nondestructive
 # Now set the environment variable VIRTUAL_ENV, used by many tools to determine
 # that there is an activated venv.
 $env:VIRTUAL_ENV = $VenvDir
+$env:FLASK_APP = "flaskr"
+$env:FLASK_ENV = "development"
 
 if (-not $Env:VIRTUAL_ENV_DISABLE_PROMPT) {
 

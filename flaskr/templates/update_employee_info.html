@@ -1,32 +1,37 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>Hello from update employee info</h2>
+
+<form method="POST" action="">
+  {{ form.hidden_tag() }}
+  <fieldset class="form-group">
+  </fieldset>
 
 
-<form action="#" method="POST">
-    <fieldset class="form-group">
-    </fieldset>
     <div class="form-row">
-      <!-- first name -->
+
+      <!-- populate employee name drop down -->
       <div class="form-group col-md-4">
-        {{ form.employee_SIN.label(class="form-control-label") }}
-  
-        {% if form.employee_SIN.errors %}
-        {{ form.employee_SIN(class="form-control form-control-lg is-invalid") }}
+        {{ form.employee_update.label(class="form-control-label") }}
+
+        {% if form.employee_update.errors %}
+        {{ form.employee_update(class="form-control form-control-lg is-invalid") }}
         <div class="invalid-feedback">
-          {% for error in form.employee_SIN.errors %}
-          <span>{{ error }}</span>
-          {% endfor %}
+                {% for error in form.employee_update.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
         </div>
         {% else %}
-        {{ form.employee_SIN(class="form-control form-control-lg") }}
+        {{ form.employee_update(class="form-control form-control-lg") }}
         {% endif %}
       </div>
-      </div>
+    </div>
         
-      <div class="form-group">
-        {{ form.submit(class="btn btn-outline-info") }}
-      </div>
+    <!-- Submit button -->
+    <div class="form-group">
+      {{ form.submit(class="btn btn-outline-info") }}
+    </div>
+
+
   </form>
 
 {% endblock content %}

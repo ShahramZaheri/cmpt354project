@@ -11,8 +11,18 @@ CREATE TABLE Employee(
     Address CHARACTER(100) NOT NULL,
     PRIMARY KEY (EmployeeID)
     );
-    
-
+   
+CREATE TABLE exEmployees(
+    EmployeeID char(7) NOT NULL,
+    SIN int(9) NOT NULL,
+    DateofBirth DATE NOT NULL,
+    DateofHire DATE NOT NULL,
+    Fname CHARACTER(100) NOT NULL,
+    Mname CHARACTER(100) ,
+    Lname CHARACTER(100) NOT NULL,
+    Address CHARACTER(100),
+    TerminationDate DATE NOT NULL
+    );
 
 CREATE TABLE Vacation (
 	ID char(7) NOT NULL,
@@ -182,8 +192,21 @@ VALUES(0001,100,12,18,'2021-03-10'),
 --       (0004,103,'12:00:00','16:00:00','2021-03-10'),
 --       (0005,104,'12:40:01','18:10:02','2021-03-10');
 
+CREATE TRIGGER adding_to_exEmployess
+   AFTER DELETE ON Employee
+BEGIN
+    INSERT INTO exEmployees 
+    VALUES (old.EmployeeID, old.SIN, old.DateofBirth, old.DateofHire, old.Fname, old.Mname, old.Lname, old.Address,DATETIME('NOW'));
+       
+END;
 
-
+CREATE TRIGGER update_vacation_pay
+    AFTER UPDATE OF PercentageofGrossPay ON vacation
+    FOR EACH ROW 
+BEGIN 
+    UPDATE vacation
+    SET TotalVacationEarned = 1.2*(TotalVacationEarned);
+END;
 
 
 /*EMPLOYEE REPORT - JOIN QUERY*/

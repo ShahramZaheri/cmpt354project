@@ -4,8 +4,8 @@ from datetime import datetime, date
 
 
 from flask import Flask, render_template, url_for, flash, redirect, request
-from forms import NewEmployeeForm, update_employee_info_form, RemoveEmployeeForm, PayrollForm, ContactForm, RemoveContactForm, Add_shift_form, get_shifts_form, GeneratePayStub
-
+from forms import NewEmployeeForm, update_employee_info_form, RemoveEmployeeForm, UpdateEmployeeFilloutFrom ,PayrollForm, ContactForm, RemoveContactForm, Add_shift_form, get_shifts_form, GeneratePayStub
+from wtforms.fields import Label 
 
 
 TODAYS_DATE = datetime.today().strftime('%Y-%m-%d')
@@ -126,8 +126,175 @@ def create_app(test_config=None):
 
         @app.route('/employee/update_employee_info', methods=['GET', 'POST'])
         def update_employee_info():
-                form=update_employee_info_form()
-                return render_template('update_employee_info.html',form=form)
+                drop_down_form = update_employee_info_form()
+
+                # open database connection
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+
+                # Populate drop down dynamically
+                cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
+                employees = cur.fetchall()
+                employees_list=[(employee['Fname'] + " " + employee['Lname']) for employee in employees]
+                employees_list.insert(0,"")
+                drop_down_form.employee_update.choices = employees_list
+
+                if drop_down_form.validate_on_submit():
+
+        
+                        fname = drop_down_form.employee_update.data.split(" ")[0]
+                        lname = drop_down_form.employee_update.data.split(" ")[1]
+
+                        conn.commit()
+                        cur.close()
+
+                        return redirect(url_for('update_fill_out', fname = fname , lname = lname))
+                        
+                
+                conn.commit()
+                cur.close()
+                
+                return render_template('update_employee_info.html',form=drop_down_form)
+
+        
+        @app.route('/update_fill_out/<fname>/<lname>', methods=['GET', 'POST'])
+        def update_fill_out(fname , lname):
+                update_form = UpdateEmployeeFilloutFrom()
+
+                # open database connection
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+
+                # get the ID for the selected employee
+                query = '''
+                        SELECT E.EmployeeID
+                        FROM Employee E
+                        WHERE Fname = ? AND Lname = ? 
+                        '''
+                cur.execute(query,(fname,lname))
+                tmp = cur.fetchall()
+                ID = tmp [0]['EmployeeID']
+                print (tmp)
+                print ("size of tmp: "+ str(len(tmp)))
+                # get the employee's info 
+                query = '''SELECT *, PhoneNumber FROM Employee, Phone 
+                           WHERE EmployeeID = ? AND Phone.ID = Employee.EmployeeID'''
+                cur.execute(query , (ID))
+                current_vals = cur.fetchall()
+
+                # display current values 
+                update_form.employee_Address.label.text = str(current_vals[0]['Address'])
+                update_form.employee_first_name.label.text = fname
+                update_form.employee_middle_name.label.text = str(current_vals[0]['Mname'])
+                update_form.employee_last_name.label.text = lname
+                update_form.employee_SIN.label.text = str(current_vals[0]['SIN'])
+                update_form.employee_phone.label.text = str(current_vals[0]['PhoneNumber'])
+                update_form.employee_date_of_birth.label.text = str(current_vals[0]['DateofBirth'])
+                update_form.employee_first_name.label.text = fname
+              
+
+                # query the Office table to see what department the employee is in
+                query = "SELECT * FROM Office WHERE ID = ?"
+                cur.execute(query,(ID))
+                Department = cur.fetchall()
+
+                # query is empty, employee is in operations
+                if(len(Department) == 0):
+                        d_name = 'Operations'
+                        update_form.employee_role.label.text = 'Operations'
+                        update_form.employee_role.choices = ['Operations', 'Office']
+                        cur.execute("SELECT WagePerHour From Operations Where ID = ?", (ID))
+                        wage = cur.fetchall()[0]['WagePerHour']
+                        update_form.employee_salary.label.text = wage
+                else:
+                        d_name = 'Office'
+                        update_form.employee_role.label.text= 'Office'
+                        update_form.employee_role.choices = ['Office', 'Operations']
+                        update_form.employee_salary.label.text = Department[0]['Salary']
+
+                full_name = fname + " " + lname 
+
+                if update_form.validate_on_submit():
+                        # check which fields have changed and update them
+                        
+                        if (len(update_form.employee_SIN.data) != 0):
+                                cur.execute("Update Employee SET SIN = ? WHERE EmployeeID = ?" ,( update_form.employee_SIN.data, ID))
+                        if (len(update_form.employee_date_of_birth.data) != 0):
+                                cur.execute("Update Employee SET DateofBirth = ? WHERE EmployeeID = ?" , (update_form.employee_date_of_birth.data , ID))
+                        if (len(update_form.employee_first_name.data) != 0):
+                                cur.execute("Update Employee SET Fname = ? WHERE EmployeeID = ?" , (update_form.employee_first_name.data, ID))
+                        if (len(update_form.employee_last_name.data) != 0):
+                                cur.execute("Update Employee SET Lname = ? WHERE EmployeeID = ?" ,( update_form.employee_last_name.data, ID))
+                        if (len(update_form.employee_middle_name.data) != 0):
+                                cur.execute("Update Employee SET Mname = ? WHERE EmployeeID = ?" , (update_form.employee_middle_name.data, ID))
+                        if (len(update_form.employee_Address.data) != 0):
+                                cur.execute("Update Employee SET Address = ? WHERE EmployeeID = ?" , (update_form.employee_Address.data, ID))
+                        if (len(update_form.employee_phone.data) != 0):
+                                # format phone number before adding to DB
+                                tmp = update_form.employee_phone.data
+                                first = tmp[0:3]
+                                second = tmp[3:6]
+                                third = tmp[6:10]
+                                format_number = "(" + first + ") " + second + "-" + third
+                                cur.execute("UPDATE Phone SET PhoneNumber = ? WHERE ID = ?", (format_number, ID) )
+
+                        
+                
+                        
+                        
+
+                        # reflect changes in Operations and Office tables 
+                        # if statemeants are used because SQL Tables can not be variables
+                        print ("Name: " + fname + " Selected Role:" + str(update_form.employee_role.data))
+                        if( len(update_form.employee_salary.data) != 0 ):
+                                if (d_name == "Operations"):
+                                        query = "DELETE FROM Operations WHERE ID = ?"
+                                        cur.execute(query, (ID))
+                                        
+
+                                        if (update_form.employee_role.data == 'Office'):
+                                                query = "INSERT INTO Office VALUES(?, ?)"
+                                                cur.execute(query, (ID ,update_form.employee_salary.data))
+                                        else:
+                                                query = "INSERT INTO Operations VALUES(?, ?)"
+                                                cur.execute(query, (ID ,update_form.employee_salary.data))
+                                                
+                                else:
+                                        query = "DELETE FROM Office WHERE ID = ?"
+                                        cur.execute(query, (ID))
+                                        
+
+                                        if (update_form.employee_role.data == 'Office'):
+                                                query = "INSERT INTO Office VALUES(?, ?)"
+                                                cur.execute(query, (ID ,update_form.employee_salary.data))
+                                        else:
+                                                query = "INSERT INTO Operations VALUES(?, ?)"
+                                                cur.execute(query, (ID ,update_form.employee_salary.data))
+
+                
+                        conn.commit()
+                        cur.close()
+                        return(redirect(url_for('update_employee_info')))
+
+
+                conn.commit()
+                cur.close()
+
+                return render_template('update_fill_out.html', form = update_form, name = full_name)#, form = form, name = name)
+
+        
+        @app.route('/employee/ex_employee_info', methods=['GET', 'POST'])
+        def ex_employee_info():
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                cur.execute("SELECT * FROM exEmployees")
+                exEmployees = cur.fetchall()
+                conn.commit()
+                
+                return render_template('exEmployeesInfo.html',exEmployees=exEmployees)
 
         @app.route('/report')
         def report():
@@ -162,6 +329,8 @@ def create_app(test_config=None):
                                 query = "DELETE FROM Employee WHERE EmployeeID = ?"
                                 cur.execute(query,(e))
 
+                        cur.execute("SELECT * FROM exEmployees")
+                        exEmployees = cur.fetchall()
                         conn.commit()
                         cur.close()
                         return redirect(url_for('removeEmployee'))
