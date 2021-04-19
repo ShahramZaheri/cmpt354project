@@ -79,7 +79,7 @@ def create_app(test_config=None):
                         
                       
                         #Add the new employee into the 'Employee' table
-                        query = 'insert into Employee VALUES (?, ?, ?, ?, ?, ?, ?,?,?)'
+                        query = 'insert into Employee VALUES (?, ?, ?, ?, ?, ?, ?,?)'
                         c.execute(query, (EMPLOYEE_ID,
                                 form.employee_SIN.data,
                                 form.employee_date_of_birth.data,
@@ -87,8 +87,7 @@ def create_app(test_config=None):
                                 form.employee_first_name.data,
                                 form.employee_middle_name.data,
                                 form.employee_last_name.data,
-                                form.employee_Address.data,
-                                form.employee_role.data))
+                                form.employee_Address.data))
                         ######################################################################################################
                         
                         if (form.employee_role.data == "office"):
