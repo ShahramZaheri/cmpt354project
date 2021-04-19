@@ -624,7 +624,7 @@ def create_app(test_config=None):
         @app.route('/vacation')
         def vacation():
 
-
+                
                 return render_template('vacation.html')
 
 

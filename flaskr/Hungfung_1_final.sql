@@ -30,8 +30,10 @@ CREATE TABLE Vacation (
     PercentageofGrossPay float NOT NULL,
     YearlyCarryOver int NOT NULL,
     TotalVacationPaid float NOT NULL,
+    ChequeNumber char(10) NOT NULL,
     PRIMARY KEY (TotalVacationEarned, ID),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
+    FOREIGN KEY (ChequeNumber) REFERENCES Payroll(ChequeNumber)
     ON DELETE CASCADE
     );
 
@@ -88,16 +90,17 @@ CREATE TABLE Shift(
     );
 
 
+
+
 CREATE TABLE Phone(
     PhoneNumber CHAR(20) NOT NULL,
     ID char(7) NOT NULL,
     PRIMARY KEY(PhoneNumber, ID),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
     ON DELETE CASCADE
-    );
+);
 
 
-/*initial values*/
 
 INSERT INTO Employee (EmployeeID, SIN, DateofBirth, DateofHire, Fname, Mname, Lname, Address)
 VALUES (0001, 897586446, '1987-01-09', '2018-04-26', 'Jack', 'Young', 'Ma', '8990 Alpha Street'),
@@ -166,11 +169,11 @@ VALUES ('(778) 789-5645', 0001),
 	   ('(778) 456-1293', 0004),
 	   ('(778) 236-1290', 0005);
 
-INSERT INTO Vacation(ID, TotalVacationEarned, PercentageofGrossPay, YearlyCarryOver, TotalVacationPaid)
-VALUES(0001,2000,0.4,2000,0),
-	  (0002,5200,0.6,2200,3000),
-	  (0003,5060,0.6,2060,3000),
-	  (0004,5100,0.6,2100,3000);
+INSERT INTO Vacation(ID, TotalVacationEarned, PercentageofGrossPay, YearlyCarryOver, TotalVacationPaid, ChequeNumber)
+VALUES(0001,2000,0.4,2000,0, 10003),
+	  (0001,5200,0.6,2200,3000, 10004),
+	  (0001,5060,0.6,2060,3000, 10005),
+	  (0001,5100,0.6,2100,3000, 10006);
 
 INSERT INTO Shift(ID, ShiftID, StartTime, EndTime, DateofShift)
 VALUES(0001,100,'12:20:01','18:10:02','2021-03-10'),
