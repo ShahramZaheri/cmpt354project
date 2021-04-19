@@ -286,6 +286,19 @@ def create_app(test_config=None):
 
 
 
+                form=update_employee_info_form()
+                return render_template('update_employee_info.html',form=form)
+        
+        @app.route('/employee/ex_employee_info', methods=['GET', 'POST'])
+        def ex_employee_info():
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                cur.execute("SELECT * FROM exEmployees")
+                exEmployees = cur.fetchall()
+                conn.commit()
+                
+                return render_template('exEmployeesInfo.html',exEmployees=exEmployees)
 
         @app.route('/report')
         def report():
@@ -320,6 +333,8 @@ def create_app(test_config=None):
                                 query = "DELETE FROM Employee WHERE EmployeeID = ?"
                                 cur.execute(query,(e))
 
+                        cur.execute("SELECT * FROM exEmployees")
+                        exEmployees = cur.fetchall()
                         conn.commit()
                         cur.close()
                         return redirect(url_for('removeEmployee'))
