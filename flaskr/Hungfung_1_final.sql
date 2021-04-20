@@ -1,4 +1,4 @@
-/*create tables*/
+/* needed for sqlite to recognize foreign keys*/
 PRAGMA foreign_keys=on;
 
 CREATE TABLE Employee(
@@ -24,18 +24,6 @@ CREATE TABLE exEmployees(
     Address CHARACTER(100),
     TerminationDate DATE NOT NULL
     );
-
-CREATE TABLE Vacation (
-	ID char(7) NOT NULL,
-    TotalVacationEarned int(100) NOT NULL,
-    PercentageofGrossPay float NOT NULL,
-    YearlyCarryOver int NOT NULL,
-    TotalVacationPaid float NOT NULL,
-    PRIMARY KEY (TotalVacationEarned, ID),
-    FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
-    ON DELETE CASCADE
-    );
-
 
 CREATE TABLE EmergencyContact(
     ContactName CHARACTER(100) NOT NULL,
@@ -88,9 +76,6 @@ CREATE TABLE Shift(
     ON DELETE CASCADE
     );
 
-
-
-
 CREATE TABLE Phone(
     PhoneNumber CHAR(20) NOT NULL,
     ID char(7) NOT NULL,
@@ -105,7 +90,6 @@ CREATE TABLE Holiday(
     PRIMARY KEY (DateofHoliday)
 
 );
-
 
 
 /*------------------------------------ Initial Values ------------------------------------------*/
@@ -156,11 +140,6 @@ VALUES ('(778) 789-5645', 0001),
 	   ('(778) 456-1293', 0004),
 	   ('(778) 236-1290', 0005);
 
-INSERT INTO Vacation(ID, TotalVacationEarned, PercentageofGrossPay, YearlyCarryOver, TotalVacationPaid)
-VALUES(0001,2000,0.4,2000,0),
-	  (0002,5200,0.6,2200,3000),
-	  (0003,5060,0.6,2060,3000),
-	  (0004,5100,0.6,2100,3000);
 
 INSERT INTO Shift(ID, ShiftID, StartTime, EndTime, DateofShift)
 VALUES(0003,100,12,18,'2021-01-01'),
@@ -184,28 +163,6 @@ BEGIN
        
 END;
 
-CREATE TRIGGER update_vacation_pay
-    AFTER UPDATE OF PercentageofGrossPay ON vacation
-    FOR EACH ROW 
-BEGIN 
-    UPDATE vacation
-    SET TotalVacationEarned = 1.2*(TotalVacationEarned);
-END;
 
-
-
-/*Division query*/
-
-
-/*
-CREATE TABLE EmployeeWithTwoYearsExperience AS 
-SELECT employee.EmployeeID, employee.Fname, employee.Lname, DATEDIFF(SYSDATE, employee.DateofHire)/365 
-FROM employee
-WHERE DATEDIFF(SYSDATE, employee.DateofHire)/365 >2;
-
-SELECT * FROM EmployeeWithTwoYearsExperience WHERE NOT EXISTS 
-(SELECT * FROM Office WHERE EmployeewithTwoYearsExperience.EmployeeID = Office.ID )
-);
-*/
 
 

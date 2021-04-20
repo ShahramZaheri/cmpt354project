@@ -64,14 +64,13 @@ def create_app(test_config=None):
 
         @app.route('/employee', methods=['GET', 'POST'])
         def employee():
-                
                 return render_template('employee.html')
 
         @app.route('/employee/add_new_employee', methods=['GET', 'POST'])
         def add_new_employee():
                 form=NewEmployeeForm()
-                
                 global TODAYS_DATE 
+
                 if form.validate_on_submit():
                         
                         if(len(form.employee_middle_name.data) == 0):
@@ -81,6 +80,7 @@ def create_app(test_config=None):
                         conn = sqlite3.connect("instance/flaskr.sqlite")
                         c = conn.cursor()
                         c.execute("PRAGMA foreign_keys=on")
+
                         #use next available ID
                         c.execute('''
                                 SELECT MAX(EmployeeID)
@@ -89,7 +89,6 @@ def create_app(test_config=None):
                                 )
                         Employee_id_dict = list(c.fetchall())
                         EMPLOYEE_ID = str(int(Employee_id_dict[0][0]) + 1)
-                        print ("Max employee ID: " + EMPLOYEE_ID)
                         
                       
                         #Add the new employee into the 'Employee' table
