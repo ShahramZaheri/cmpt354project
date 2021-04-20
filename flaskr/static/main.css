@@ -1,3 +1,4 @@
+
 body {
   background:#fff8ea;
   color: #666363;
@@ -87,5 +88,11 @@ a.article-title:hover {
   margin-left: 0;
   margin-top: 10px;
   
+}
+
+.col-md-3{
+  display: inline-block;
+  background-color: #fff8ea;
+  left: auto;
 }
 

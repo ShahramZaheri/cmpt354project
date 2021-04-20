@@ -475,7 +475,6 @@ def create_app(test_config=None):
                         if (new_cheque_number[0]['MAX(ChequeNumber)'] is None):
                                 new_cheque_number = 10000
                         else:
-                                print (new_cheque_number[0]['MAX(ChequeNumber)'])
                                 new_cheque_number = int(new_cheque_number[0]['MAX(ChequeNumber)'])+1
 
                         insert_query = '''INSERT INTO Payroll VALUES (?,?,?,?,?,?,?,?)'''
