@@ -49,6 +49,8 @@ def create_app(test_config=None):
 
                 cur.execute(query,(fname,lname))
                 employee_id = cur.fetchall()[0]['EmployeeID']
+                conn.commit()
+                cur.close()
                 return employee_id
         
 
@@ -78,7 +80,7 @@ def create_app(test_config=None):
                         
                         conn = sqlite3.connect("instance/flaskr.sqlite")
                         c = conn.cursor()
-
+                        c.execute("PRAGMA foreign_keys=on")
                         #use next available ID
                         c.execute('''
                                 SELECT MAX(EmployeeID)
@@ -87,11 +89,11 @@ def create_app(test_config=None):
                                 )
                         Employee_id_dict = list(c.fetchall())
                         EMPLOYEE_ID = str(int(Employee_id_dict[0][0]) + 1)
-
+                        print ("Max employee ID: " + EMPLOYEE_ID)
                         
                       
                         #Add the new employee into the 'Employee' table
-                        query = 'insert into Employee VALUES (?, ?, ?, ?, ?, ?, ?,?)'
+                        query = '''insert into Employee VALUES (?, ?, ?, ?, ?, ?, ?,?)'''
                         c.execute(query, (EMPLOYEE_ID,
                                 form.employee_SIN.data,
                                 form.employee_date_of_birth.data,
@@ -100,15 +102,17 @@ def create_app(test_config=None):
                                 form.employee_middle_name.data,
                                 form.employee_last_name.data,
                                 form.employee_Address.data))
-                        ######################################################################################################
-                        
-                        if (form.employee_role.data == "office"):
+
+                        print("role = " + form.employee_role.data)
+                        if (form.employee_role.data == "Office"):
                                 # add to office table
-                                query = 'insert into Office VALUES (?, ?)'
+                                print("OFFICE!!")
+                                query = '''insert into Office VALUES (?, ?)'''
                                 c.execute(query, (EMPLOYEE_ID, int(form.employee_salary.data)))
                         
                         else:
                                 # add to operations table
+                                print("OPERATIONS!!")
                                 query = 'insert into Operations VALUES (?, ?)'
                                 c.execute(query, (EMPLOYEE_ID, float(form.employee_salary.data)))
 
@@ -143,7 +147,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
-
+                cur.execute("PRAGMA foreign_keys=on")
                 # Populate drop down dynamically
                 cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
                 employees = cur.fetchall()
@@ -177,6 +181,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
+                cur.execute("PRAGMA foreign_keys=on")
 
                 # get the ID for the selected employee
                 query = '''
@@ -301,6 +306,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
+                cur.execute("PRAGMA foreign_keys=on")
                 cur.execute("SELECT * FROM exEmployees")
                 exEmployees = cur.fetchall()
                 conn.commit()
@@ -318,7 +324,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
-
+                cur.execute("PRAGMA foreign_keys=on")
                 # list all employees
                 cur.execute('''
                                 SELECT E1.*
@@ -338,6 +344,7 @@ def create_app(test_config=None):
                         for e in selected_employees:
                                 #remove selected employees 
                                 query = "DELETE FROM Employee WHERE EmployeeID = ?"
+                                print("remove ID: " +str(e) +" from Employee")
                                 cur.execute(query,(e))
 
                         cur.execute("SELECT * FROM exEmployees")
@@ -355,6 +362,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
+                cur.execute("PRAGMA foreign_keys=on")
                 # display operations employees
                 cur.execute('''
                         SELECT E.*, P.PhoneNumber, O.WagePerHour
@@ -383,7 +391,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
-
+                cur.execute("PRAGMA foreign_keys=on")
                 query = ''' SELECT *
                             FROM Employee E, Office Of
                             WHERE E.EmployeeID = ? and E.EmployeeID = Of.ID ''' 
@@ -408,7 +416,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
-
+                cur.execute("PRAGMA foreign_keys=on")
                 query = ''' SELECT *
                             FROM Employee E, Shift S
                             WHERE E.EmployeeID = ? and E.EmployeeID = S.ID and S.DateofShift BETWEEN ? and ? ''' 
@@ -431,7 +439,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
-
+                cur.execute("PRAGMA foreign_keys=on")
                 # Populate drop down dynamically
                 cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
                 employees = cur.fetchall()
@@ -462,9 +470,9 @@ def create_app(test_config=None):
                         new_cheque_number_query = '''Select MAX(ChequeNumber) From Payroll'''
                         cur.execute(new_cheque_number_query)
                         new_cheque_number = cur.fetchall()
-                        print ("length of cheque num " + str(len(new_cheque_number)))
+                        
 
-                        if (len(new_cheque_number[0]) == 0):
+                        if (new_cheque_number[0]['MAX(ChequeNumber)'] is None):
                                 new_cheque_number = 10000
                         else:
                                 print (new_cheque_number[0]['MAX(ChequeNumber)'])
@@ -540,6 +548,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
+                cur.execute("PRAGMA foreign_keys=on")
                 cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
                 employees = cur.fetchall()
                 employees_list=[(employee['Fname'] + " " + employee['Lname']) for employee in employees]
@@ -569,6 +578,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
+                cur.execute("PRAGMA foreign_keys=on")
                 cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
                 employees = cur.fetchall()
                 employees_list=[(employee['Fname'] + " " + employee['Lname']) for employee in employees]
@@ -605,7 +615,7 @@ def create_app(test_config=None):
                 connection = sqlite3.connect("instance/flaskr.sqlite")
                 connection.row_factory = dict_factory
                 cur = connection.cursor()
-
+                cur.execute("PRAGMA foreign_keys=on")
                 # get emergency contact info
                 cur.execute('''
                                 SELECT EC.ContactName, EC.PhoneNumber, 
@@ -628,7 +638,7 @@ def create_app(test_config=None):
                 conn = sqlite3.connect("instance/flaskr.sqlite")
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
-
+                cur.execute("PRAGMA foreign_keys=on")
                 # Populate drop down dynamically
                 cur.execute(''' SELECT EmployeeID, Fname, Lname FROM Employee''')
                 employees = cur.fetchall()
@@ -676,6 +686,7 @@ def create_app(test_config=None):
                 connection = sqlite3.connect("instance/flaskr.sqlite")
                 connection.row_factory = dict_factory
                 cur = connection.cursor()
+                cur.execute("PRAGMA foreign_keys=on")
 
                 # get emergency contact info
                 cur.execute('''

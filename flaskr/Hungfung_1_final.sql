@@ -1,4 +1,5 @@
 /*create tables*/
+PRAGMA foreign_keys=on;
 
 CREATE TABLE Employee(
     EmployeeID char(7) NOT NULL,
@@ -167,7 +168,6 @@ BEGIN
     SET TotalVacationEarned = 1.2*(TotalVacationEarned);
 END;
 
-<<<<<<< HEAD
 
 /*EMPLOYEE REPORT - JOIN QUERY*/
 /*SELECT employee.EmployeeID, employee.Fname, employee.Lname, DATEDIFF(SYSDATE(), employee.DateofHire)/365
@@ -187,16 +187,14 @@ WHERE payroll.ID = employee.EmployeeID; */
 /*Division query*/
 
 
-
+/*
 CREATE TABLE EmployeeWithTwoYearsExperience AS 
-SELECT employee.EmployeeID, employee.Fname, employee.Lname, DATEDIFF(SYSDATE(), employee.DateofHire)/365 
+SELECT employee.EmployeeID, employee.Fname, employee.Lname, DATEDIFF(SYSDATE, employee.DateofHire)/365 
 FROM employee
-WHERE DATEDIFF(SYSDATE(), employee.DateofHire)/365 >2;
+WHERE DATEDIFF(SYSDATE, employee.DateofHire)/365 >2;
 
 SELECT * FROM EmployeeWithTwoYearsExperience WHERE NOT EXISTS 
 (SELECT * FROM Office WHERE EmployeewithTwoYearsExperience.EmployeeID = Office.ID )
 );
+*/
 
-
-=======
->>>>>>> e95e52d262677ab194007010d23432ded2a006ac
