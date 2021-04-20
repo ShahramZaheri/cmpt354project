@@ -569,7 +569,7 @@ def create_app(test_config=None):
                 return render_template('timecard.html', form=form)
 
 
-        @app.route('/shift/add_shit', methods=['GET', 'POST'])
+        @app.route('/shift/add_shift', methods=['GET', 'POST'])
         def add_shift():
                 form = Add_shift_form()
                  # Populate drop down dynamically
