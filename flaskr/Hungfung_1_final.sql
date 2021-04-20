@@ -167,7 +167,6 @@ BEGIN
     SET TotalVacationEarned = 1.2*(TotalVacationEarned);
 END;
 
-<<<<<<< HEAD
 
 /*EMPLOYEE REPORT - JOIN QUERY*/
 /*SELECT employee.EmployeeID, employee.Fname, employee.Lname, DATEDIFF(SYSDATE(), employee.DateofHire)/365
@@ -198,5 +197,3 @@ SELECT * FROM EmployeeWithTwoYearsExperience WHERE NOT EXISTS
 );
 
 
-=======
->>>>>>> e95e52d262677ab194007010d23432ded2a006ac

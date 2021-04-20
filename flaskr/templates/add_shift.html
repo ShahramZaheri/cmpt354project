@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container m-auto p-3 bg-light">
-    <form method="POST" action="">
+
+    <form method="POST" action="" style="background: #fff8ea;">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
         </fieldset>
 
-        <div class="form-row">
+        <div class="form-row" style="background: #fff8ea;">
 
                 <!-- Employee Dropdown  -->
                 <div class="form-group col-md-3">
@@ -60,7 +60,7 @@
 
         <!-- End Time -->
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-3" style="background-color: #fff8ea;" >
             {{ form.sift_end_time.label(class="form-control-label") }}
       
             {% if form.sift_end_time.errors %}
@@ -83,7 +83,7 @@
                 {{ form.submit(class="btn btn-outline-info") }}
         </div>
     </form>
-</div>
+
 
 
 

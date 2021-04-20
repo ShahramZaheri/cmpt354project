@@ -1,20 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container m-auto p-3 bg-light">
-    <form method="POST" action="">
+    <form method="POST" action="" style="background-color: #fff8ea;">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
         </fieldset>
 
-        <div class="form-row">
+        <div class="form-row" style="background-color: #fff8ea;">
 
                 <!-- Employee Dropdown  -->
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-3" style="background-color: #fff8ea;">
                         {{ form.employee_filter.label(class="form-control-label") }}
                   
                         {% if form.employee_filter.errors %}
                         {{ form.employee_filter(class="form-control form-control-sm is-invalid") }}
-                        <div class="invalid-feedback">
+                        <div class="invalid-feedback" style="background-color: #fff8ea;">
                           {% for error in form.employee_filter.errors %}
                           <span>{{ error }}</span>
                           {% endfor %}
@@ -24,11 +23,11 @@
                         {% endif %}
                 </div>
         </div>
-        <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
+        <div class="form-group" style="background-color: #fff8ea;">
+                {{ form.submit(class="btn btn-outline-info" ) }}
         </div>
     </form>
-</div>
+
 
 
 
