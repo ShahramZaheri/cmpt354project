@@ -99,9 +99,29 @@ CREATE TABLE Phone(
     ON DELETE CASCADE
 );
 
+CREATE TABLE Holiday(
+    DateofHoliday date NOT NULL,
+    HolidayName varchar(20) NOT NULL,
+    PRIMARY KEY (DateofHoliday)
+
+);
+
 
 
 /*------------------------------------ Initial Values ------------------------------------------*/
+
+INSERT INTO Holiday (DateofHoliday, HolidayName)
+VALUES ('2021-01-01', 'New Year’s Day'),
+        ('2021-02-15', 'Family Day'),
+        ('2021-04-02', 'Good Friday'),
+        ('2021-05-24', 'Victoria Day'),
+        ('2021-07-01', 'Canada Day'),
+        ('2021-08-02', 'BC Day'),
+        ('2021-09-06', 'Labour Day'),
+        ('2021-10-11', 'Thanksgiving'),
+        ('2021-11-11', 'Remembrance Day'),
+        ('2021-12-25', 'Christmas Day');
+
 
 INSERT INTO Employee (EmployeeID, SIN, DateofBirth, DateofHire, Fname, Mname, Lname, Address)
 VALUES (0001, 897586446, '1987-01-09', '2018-04-26', 'Jack', 'Young', 'Ma', '8990 Alpha Street'),
@@ -143,12 +163,16 @@ VALUES(0001,2000,0.4,2000,0),
 	  (0004,5100,0.6,2100,3000);
 
 INSERT INTO Shift(ID, ShiftID, StartTime, EndTime, DateofShift)
-VALUES(0003,100,12,18,'2021-03-10'),
-      (0003,101,11,15,'2021-04-10'),
-      (0003,102,9,14,'2021-03-15'),
-      (0004,103,12,16,'2021-03-10'),
-      (0004,105,12,16,'2021-03-10'),
-      (0005,104,12,18,'2021-03-10');
+VALUES(0003,100,12,18,'2021-01-01'),
+      (0003,101,11,15,'2021-02-15'),
+      (0003,102,9,14,'2021-04-02'),
+      (0003,103,12,16,'2021-05-24'),
+      (0003,105,12,16,'2021-07-01'),
+      (0003,106,12,18,'2021-08-02'),
+      (0003,104,12,18,'2021-09-06'),
+      (0003,107,12,18,'2021-10-11'),
+      (0003,108,12,18,'2021-11-11'),
+      (0003,109,12,18,'2021-12-25');
 
 
 
@@ -169,20 +193,6 @@ BEGIN
 END;
 
 
-/*EMPLOYEE REPORT - JOIN QUERY*/
-/*SELECT employee.EmployeeID, employee.Fname, employee.Lname, DATEDIFF(SYSDATE(), employee.DateofHire)/365
-AS DATEDIFF, Payroll.ID, Payroll.PayrollDate, Payroll.GrossPay, Payroll.CPP, Payroll.EI, Payroll.FederalTax, Payroll.ProvincialTax 
-FROM employee
-INNER JOIN Payroll ON EMPLOYEE.EmployeeID = Payroll.ID;
-
-
-/*Alter vacation pay value */ /*How to do it automatically
-UPDATE vacation SET PercentageofGrossPay=0.6 WHERE vacation.ID IN (
- 		SELECT EmployeeID FROM employee WHERE (DATEDIFF(SYSDATE(), employee.DateofHire)/365)>4 AND employee.EmployeeID = Vacation.ID);
-
-/*Aggregation query - average weekly pay
-SELECT employee.Fname, employee.Lname, payroll.ID, AVG(payroll.GrossPay/48) FROM employee,payroll
-WHERE payroll.ID = employee.EmployeeID; */
 
 /*Division query*/
 

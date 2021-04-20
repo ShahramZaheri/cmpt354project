@@ -727,9 +727,34 @@ def create_app(test_config=None):
 
 
         
-        @app.route('/vacation', methods=['GET', 'POST'])
-        def vacation():
-                return(render_template('vacation.html'))
+        @app.route('/holiday', methods=['GET', 'POST'])
+        def holiday():
+                conn = sqlite3.connect("instance/flaskr.sqlite")
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                cur.execute("PRAGMA foreign_keys=on")
+
+                query = '''
+
+                        SELECT E.EmployeeID, E.Fname, E.Mname, E.Lname
+                        FROM Employee E
+                        WHERE NOT EXISTS (
+                                SELECT H.DateofHoliday
+                                FROM Holiday H
+                                WHERE H.DateofHoliday NOT IN (
+                                        SELECT DISTINCT S.DateofShift
+                                        FROM Shift S
+                                        WHERE S.ID = E.EmployeeID
+                                )
+
+                        )
+
+                        '''
+                cur.execute(query)
+                employees = cur.fetchall()
+                conn.commit()
+                cur.close()
+                return(render_template('holiday.html', employees = employees))
 
 
         from . import db
