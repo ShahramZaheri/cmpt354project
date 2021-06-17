@@ -475,10 +475,12 @@ def create_app(test_config=None):
                                 new_cheque_number = 10000
                         else:
                                 new_cheque_number = int(new_cheque_number[0]['MAX(ChequeNumber)'])+1
+                        
+                
 
-                        insert_query = '''INSERT INTO Payroll VALUES (?,?,?,?,?,?,?,?)'''
+                        insert_query = '''INSERT INTO Payroll VALUES (?,?,?,?,?,?,?,?,?,?,?,?)'''
 
-                        data_row = (new_cheque_number, TODAYS_DATE, total_pay, total_pay*0.02, total_pay*0.02, total_pay*0.12, total_pay*0.12, employee_id)
+                        data_row = (new_cheque_number, TODAYS_DATE, total_pay, total_pay*0.02, total_pay*0.02, total_pay*0.12, total_pay*0.12, 1, 2, 3, 4, employee_id)
                         cur.execute(insert_query, data_row)
 
                         conn.commit()

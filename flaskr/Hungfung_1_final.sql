@@ -59,6 +59,10 @@ CREATE TABLE Payroll(
     EI float NOT NULL,
     FederalTax float NOT NULL,
     ProvincialTax float NOT NULL,
+    YTDGP float(100) NOT NULL,
+    YTDCPP float(100) NOT NULL,
+    YTDEI float(100) NOT NULL,
+    YTDNET float(100) NOT NULL,
     ID char(7) NOT NULL,
     PRIMARY KEY (ChequeNumber),
     FOREIGN KEY (ID) REFERENCES Employee(EmployeeID)
